@@ -1,0 +1,2 @@
+github "ReSwift/ReSwift" ~> 1.0.0
+github "utahiosmac/Marshal" == 0.9

@@ -1,0 +1,6 @@
+[submodule "Carthage/Checkouts/Marshal"]
+	path = Carthage/Checkouts/Marshal
+	url = https://github.com/utahiosmac/Marshal.git
+[submodule "Carthage/Checkouts/ReSwift"]
+	path = Carthage/Checkouts/ReSwift
+	url = https://github.com/ReSwift/ReSwift.git
