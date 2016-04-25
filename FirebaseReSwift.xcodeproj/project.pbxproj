@@ -351,18 +351,18 @@
 		70B21BD91CCEE25D00E329A6 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Checkouts/Marshal/build/Debug",
-					"$(PROJECT_DIR)/Carthage/Checkouts/ReSwift/build/Debug-iphoneos",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Vendor",
 				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = design.bsn.FirebaseReSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -373,18 +373,18 @@
 		70B21BDA1CCEE25D00E329A6 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
-					"$(PROJECT_DIR)/Carthage/Checkouts/Marshal/build/Debug",
-					"$(PROJECT_DIR)/Carthage/Checkouts/ReSwift/build/Debug-iphoneos",
-					"$(PROJECT_DIR)",
+					"$(PROJECT_DIR)/Vendor",
 				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = design.bsn.FirebaseReSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
