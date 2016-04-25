@@ -10,6 +10,8 @@
 		70B21BC81CCEE25D00E329A6 /* FirebaseReSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70B21BCF1CCEE25D00E329A6 /* FirebaseReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */; };
 		70B21BD41CCEE25D00E329A6 /* FirebaseReSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */; };
+		70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BDE1CCEE42A00E329A6 /* Marshal.framework */; };
+		70B21BE11CCEE43200E329A6 /* ReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE01CCEE43200E329A6 /* ReSwift.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +31,8 @@
 		70B21BCE1CCEE25D00E329A6 /* FirebaseReSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FirebaseReSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseReSwiftTests.swift; sourceTree = "<group>"; };
 		70B21BD51CCEE25D00E329A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		70B21BDE1CCEE42A00E329A6 /* Marshal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Marshal.framework; path = Marshal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B21BE01CCEE43200E329A6 /* ReSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReSwift.framework; path = ReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +40,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70B21BE11CCEE43200E329A6 /* ReSwift.framework in Frameworks */,
+				70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,6 +79,7 @@
 			children = (
 				70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */,
 				70B21BC91CCEE25D00E329A6 /* Info.plist */,
+				70B21BE21CCEE43700E329A6 /* Frameworks */,
 			);
 			path = FirebaseReSwift;
 			sourceTree = "<group>";
@@ -84,6 +91,16 @@
 				70B21BD51CCEE25D00E329A6 /* Info.plist */,
 			);
 			path = FirebaseReSwiftTests;
+			sourceTree = "<group>";
+		};
+		70B21BE21CCEE43700E329A6 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				70B21BE01CCEE43200E329A6 /* ReSwift.framework */,
+				70B21BDE1CCEE42A00E329A6 /* Marshal.framework */,
+			);
+			name = Frameworks;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -314,6 +331,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Checkouts/Marshal/build/Debug",
+					"$(PROJECT_DIR)/Carthage/Checkouts/ReSwift/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -330,6 +352,11 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Carthage/Checkouts/Marshal/build/Debug",
+					"$(PROJECT_DIR)/Carthage/Checkouts/ReSwift/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -378,6 +405,7 @@
 				70B21BDA1CCEE25D00E329A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70B21BDB1CCEE25D00E329A6 /* Build configuration list for PBXNativeTarget "FirebaseReSwiftTests" */ = {
 			isa = XCConfigurationList;
@@ -386,6 +414,7 @@
 				70B21BDD1CCEE25D00E329A6 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
