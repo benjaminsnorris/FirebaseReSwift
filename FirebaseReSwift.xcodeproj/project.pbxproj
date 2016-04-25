@@ -12,6 +12,12 @@
 		70B21BD41CCEE25D00E329A6 /* FirebaseReSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */; };
 		70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BDE1CCEE42A00E329A6 /* Marshal.framework */; };
 		70B21BE11CCEE43200E329A6 /* ReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE01CCEE43200E329A6 /* ReSwift.framework */; };
+		70B21BE41CCEE51100E329A6 /* Firebase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE31CCEE51100E329A6 /* Firebase.framework */; };
+		70B21BE61CCEE59200E329A6 /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE51CCEE59200E329A6 /* libicucore.tbd */; };
+		70B21BE81CCEE59B00E329A6 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE71CCEE59B00E329A6 /* libc++.tbd */; };
+		70B21BEA1CCEE5A700E329A6 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE91CCEE5A700E329A6 /* CFNetwork.framework */; };
+		70B21BEC1CCEE5B600E329A6 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BEB1CCEE5B600E329A6 /* Security.framework */; };
+		70B21BEE1CCEE5BF00E329A6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BED1CCEE5BF00E329A6 /* SystemConfiguration.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -31,8 +37,14 @@
 		70B21BCE1CCEE25D00E329A6 /* FirebaseReSwiftTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FirebaseReSwiftTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseReSwiftTests.swift; sourceTree = "<group>"; };
 		70B21BD51CCEE25D00E329A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		70B21BDE1CCEE42A00E329A6 /* Marshal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Marshal.framework; path = Marshal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		70B21BE01CCEE43200E329A6 /* ReSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReSwift.framework; path = ReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B21BDE1CCEE42A00E329A6 /* Marshal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Marshal.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B21BE01CCEE43200E329A6 /* ReSwift.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = ReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		70B21BE31CCEE51100E329A6 /* Firebase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Firebase.framework; path = Vendor/Firebase.framework; sourceTree = "<group>"; };
+		70B21BE51CCEE59200E329A6 /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
+		70B21BE71CCEE59B00E329A6 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
+		70B21BE91CCEE5A700E329A6 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		70B21BEB1CCEE5B600E329A6 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
+		70B21BED1CCEE5BF00E329A6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -40,7 +52,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70B21BEE1CCEE5BF00E329A6 /* SystemConfiguration.framework in Frameworks */,
+				70B21BEC1CCEE5B600E329A6 /* Security.framework in Frameworks */,
+				70B21BEA1CCEE5A700E329A6 /* CFNetwork.framework in Frameworks */,
+				70B21BE81CCEE59B00E329A6 /* libc++.tbd in Frameworks */,
+				70B21BE61CCEE59200E329A6 /* libicucore.tbd in Frameworks */,
 				70B21BE11CCEE43200E329A6 /* ReSwift.framework in Frameworks */,
+				70B21BE41CCEE51100E329A6 /* Firebase.framework in Frameworks */,
 				70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -98,6 +116,12 @@
 			children = (
 				70B21BE01CCEE43200E329A6 /* ReSwift.framework */,
 				70B21BDE1CCEE42A00E329A6 /* Marshal.framework */,
+				70B21BE31CCEE51100E329A6 /* Firebase.framework */,
+				70B21BEB1CCEE5B600E329A6 /* Security.framework */,
+				70B21BE91CCEE5A700E329A6 /* CFNetwork.framework */,
+				70B21BE71CCEE59B00E329A6 /* libc++.tbd */,
+				70B21BE51CCEE59200E329A6 /* libicucore.tbd */,
+				70B21BED1CCEE5BF00E329A6 /* SystemConfiguration.framework */,
 			);
 			name = Frameworks;
 			path = ..;
@@ -335,6 +359,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Checkouts/Marshal/build/Debug",
 					"$(PROJECT_DIR)/Carthage/Checkouts/ReSwift/build/Debug-iphoneos",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -356,6 +381,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Checkouts/Marshal/build/Debug",
 					"$(PROJECT_DIR)/Carthage/Checkouts/ReSwift/build/Debug-iphoneos",
+					"$(PROJECT_DIR)",
 				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
