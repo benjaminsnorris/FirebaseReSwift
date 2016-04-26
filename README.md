@@ -20,7 +20,153 @@ A small library to make working with Firebase and ReSwift easier in iOS apps
 - [Firebase](https://www.firebase.com)
 
 ## Usage
-More info coming soon...
+Import the module into any file where you need to reference `FirebaseAccess`, the `Subscribing` protocol, or one of the generic actions.
+```swift
+Import FirebaseReSwift
+```
+
+### `FirebaseAccess`
+This protocol along with its extension defines some core functionality with Firebase.
+
+You will typically adopt this in a struct that might look like this:
+
+```swift
+struct FirebaseNetworkAccess: FirebaseAccess {
+   static let sharedAccess: FirebaseAccess = FirebaseNetworkAccess()
+   let ref: Firebase
+   init() {
+       Firebase.defaultConfig().persistenceEnabled = true // Only for offline access
+       self.ref = Firebase(url: "https://your-app.firebaseio.com")
+   }
+}
+```
+
+#### New object ID
+> `newObjectId() -> String?`
+
+Generates an automatic id for a new child object
+
+#### Create object
+> `createObject<T>(ref: Firebase, createNewChildId: Bool = false, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Writes a Firebase object with the parameters, overwriting any values at the specific location.
+
+- Parameters:
+    - `ref`: The Firebase reference to the object to be written. Usually constructed from the base `ref` using `childByAppendingPath(_)`
+    - `createNewChildId`: A flag indicating whether a new child ID needs to be created before saving the new object.
+    - `parameters`: A `MarshaledObject` (`[String: AnyObject]`) representing the object with all of its properties.
+    - `state`: An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+
+#### Update object
+> `updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Updates the Firebase object with the parameters, leaving all other values intact.
+
+- Parameters:
+    - `ref`: The Firebase reference to the object to be updated. Usually constructed from the base `ref` using `childByAppendingPath(_)`
+    - `parameters`: A `MarshaledObject` (`[String: AnyObject]`) representing the fields to be updated with their values.
+    - `state`: An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+
+#### Remove object
+> `removeObject<T>(ref: Firebase, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Removes a Firebase object at the given ref.
+
+- Parameters:
+    - `ref`:     The Firebase reference to the object to be removed.
+    - `state`:   An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose  type matches the `state` parameter.
+
+
+### Subscribing
+This protocol is adopted by a data object in order to receive updates of that from Firebase.
+
+- **Note:** The object must also adopt `Unmarshaling` in order to parse JSON into an object of that type.
+
+#### Subscribe to objects
+> `subscribeToObjects<T: StateType>(query: FQuery, subscribingState: SubscribingState, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Calling this function results in the dispatching actions to the store for the following events that occur in Firebase matching the given query. The actions are generic actions scoped to the data object on which the function is called.
+
+- Note: The `ObjectErrored` action can be called on any of those events if the resulting data does not exist, or cannot be parsed from JSON into the data object. It is likewise a generic action scoped to the data object.
+
+- `ChildAdded` event:      `ObjectAdded` action
+- `ChildChanged` event:    `ObjectChanged` action
+- `ChildRemoved` event:    `ObjectRemoved` action
+
+- Parameters:
+    - `query`: The Firebase query to which to subscribe. This is usually constructed from the base `ref` using `childByAppendingPath(_)` or other  `FQuery` functions.
+    - `subscribingState`:  A state object that provides information on whether the object has already been subscribed to or not.
+    - `state`: An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+
+#### Errors
+```swift
+enum FirebaseSubscriptionError: ErrorType {
+    case NoData(path: String)
+    case MalformedData(path: String)
+}
+```
+
+An error that occurred parsing data from a Firebase event.
+
+- `NoData`:    The snapshot for the event contained no data
+- `MalformedData`:  The data in the snapshot could not be parsed as JSON
+
+#### Subscribing state
+A protocol to be adopted by sub states that hold a flag indicating whether an object has been subscribed to in Firebase or not.
+
+
+
+### Generic Actions
+These are actions that can be dispatched to your store that are generic and scoped to a data object that you associate. This allows them to be easily parsed in your reducers.
+
+#### Object added
+> `ObjectAdded<T: Unmarshaling>: Action`
+
+Generic action indicating that an object was added from Firebase and should be stored in the app state. The action is scoped to the object type that was added.
+- Parameters:
+    - T:      The type of object that was added. Must conform to `Unmarshaling` to be parsed from JSON.
+    - object: The actual object that was added.
+
+#### Object changed
+> `ObjectChanged<T: Unmarshaling>: Action`
+
+Generic action indicating that an object was changed in Firebase and should be modified in the app state. The action is scoped to the object type that was added.
+- Parameters:
+    - T:       The type of object that was changed. Must conform to `Unmarshaling` to be parsed from JSON.
+    - object:  The actual object that was changed.
+
+#### Object removed
+> `ObjectRemoved<T: Unmarshaling>: Action`
+
+Generic action indicating that an object was removed from Firebase and should be removed in the app state. The action is scoped to the object type that was added.
+- Parameters:
+    - T:       The type of object that was removed. Must conform to `Unmarshaling` to be parsed from JSON.
+    - object:  The actual object that was removed.
+
+#### Object errored
+> `ObjectErrored<T>: Action`
+
+Generic action indicating that an object has an error when parsing from a Firebase event. The action is scoped to the object type that was added.
+- Parameters:
+    - T:       The type of object that produced the error
+    - error:   An optional error indicating the problem that occurred
+
+#### Object subscribed
+> `ObjectSubscribed<T>: Action`
+
+Generic action indicating that an object was subscribed to in Firebase. The action is scoped to the object type that was added.
+- Parameters:
+    - T:           The type of object that can be subscribed or not
+    - subscribed:  Flag indicating subscription status
+
 
 ## Integration
 ### Carthage

@@ -21,7 +21,7 @@ import ReSwift
     let ref: Firebase
     init() {
         Firebase.defaultConfig().persistenceEnabled = true // Only for offline access
-        self.ref = Firebase(url: "https://falkor.firebaseio.com")
+        self.ref = Firebase(url: "https://your-app.firebaseio.com")
     }
  }
  ```
@@ -44,38 +44,19 @@ public extension FirebaseAccess {
     }
     
     /**
-     Updates the Firebase object with the parameters, leaving all other values intact.
-     
-     - parameter ref:   The Firebase reference to the object to be updated.
-     Usually constructed from the base `ref` using `childByAppendingPath(_)`
-     - parameter parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
-     fields to be updated with their values.
-     - parameter state: An object of type `StateType` which resolves the generic state type
-     for the return value.
-     
-     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
-     type matches the `state` parameter.
-     */
-    public func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
-        return { state, store in
-            ref.updateChildValues(parameters)
-            return nil
-        }
-    }
-    
-    /**
      Writes a Firebase object with the parameters, overwriting any values at the specific location.
      
-     - parameter ref:   The Firebase reference to the object to be written.
-     Usually constructed from the base `ref` using `childByAppendingPath(_)`
-     - parameter createNewChildId:  A flag indicating whether a new child ID needs to be
-     created before saving the new object.
-     - parameter parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
-     object with all of its properties.
-     - parameter state: An object of type `StateType` which resolves the generic state type
-     for the return value.
+     - Parameters:
+         - ref: The Firebase reference to the object to be written.
+         Usually constructed from the base `ref` using `childByAppendingPath(_)`
+         - createNewChildId: A flag indicating whether a new child ID needs to be
+         created before saving the new object.
+         - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
+         object with all of its properties.
+         - state: An object of type `StateType` which resolves the generic state type
+         for the return value.
      
-     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
+     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
     public func createObject<T>(ref: Firebase, createNewChildId: Bool = false, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
@@ -87,11 +68,33 @@ public extension FirebaseAccess {
     }
     
     /**
+     Updates the Firebase object with the parameters, leaving all other values intact.
+     
+     - Parameters:
+         - ref: The Firebase reference to the object to be updated.
+         Usually constructed from the base `ref` using `childByAppendingPath(_)`
+         - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
+         fields to be updated with their values.
+         - state: An object of type `StateType` which resolves the generic state type
+         for the return value.
+     
+     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the `state` parameter.
+     */
+    public func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            ref.updateChildValues(parameters)
+            return nil
+        }
+    }
+    
+    /**
      Removes a Firebase object at the given ref.
      
-     - parameter ref:   The Firebase reference to the object to be removed.
-     - parameter state: An object of type `StateType` which resolves the generic state type
-     for the return value.
+     - Parameters:
+         - ref:     The Firebase reference to the object to be removed.
+         - state:   An object of type `StateType` which resolves the generic state type
+         for the return value.
      
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
      type matches the `state` parameter.

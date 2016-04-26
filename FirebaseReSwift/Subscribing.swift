@@ -10,6 +10,12 @@ import Marshal
 import ReSwift
 import Firebase
 
+/// A protocol to be adopted by sub states that hold a flag indicating whether an object
+/// has been subscribed to in Firebase or not.
+public protocol SubscribingState: StateType {
+    var subscribed: Bool { get }
+}
+
 /**
  An error that occurred parsing data from a Firebase event.
  
@@ -39,23 +45,24 @@ public extension Subscribing {
      events that occur in Firebase matching the given query. The actions are generic actions
      scoped to the data object on which the function is called.
      
-     - `ChildAdded` event:      `ObjectAdded` action
-     - `ChildChanged` event:    `ObjectChanged` action
-     - `ChildRemoved` event:    `ObjectRemoved` action
-     
      - Note: The `ObjectErrored` action can be called on any of those events if the resulting
      data does not exist, or cannot be parsed from JSON into the data object. It is likewise a
      generic action scoped to the data object.
      
-     - parameter query:     The Firebase query to which to subscribe. This is usually
-     constructed from the base `ref` using `childByAppendingPath(_)` or other 
-     `FQuery` functions.
-     - parameter subscribingState:  A state object that provides information on whether the
-     object has already been subscribed to or not.
-     - parameter state: An object of type `StateType` which resolves the generic state type
-     for the return value.
+     - `ChildAdded` event:      `ObjectAdded` action
+     - `ChildChanged` event:    `ObjectChanged` action
+     - `ChildRemoved` event:    `ObjectRemoved` action
      
-     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+     - Parameters:
+         - query: The Firebase query to which to subscribe. This is usually
+         constructed from the base `ref` using `childByAppendingPath(_)` or other 
+         `FQuery` functions.
+         - subscribingState:  A state object that provides information on whether the
+         object has already been subscribed to or not.
+         - state: An object of type `StateType` which resolves the generic state type
+         for the return value.
+     
+     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
      */
     public static func subscribeToObjects<T: StateType>(query: FQuery, subscribingState: SubscribingState, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
