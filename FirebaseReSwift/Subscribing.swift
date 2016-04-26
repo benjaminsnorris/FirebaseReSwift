@@ -64,7 +64,7 @@ public extension Subscribing {
                 
                 // Additions
                 query.observeEventType(.ChildAdded, withBlock: { snapshot in
-                    if snapshot.exists() {
+                    if snapshot.exists() && !(snapshot.value is NSNull) {
                         if var json = snapshot.value as? JSONObject {
                             json[idKey] = snapshot.key
                             do {
@@ -82,7 +82,7 @@ public extension Subscribing {
                 
                 // Changes
                 query.observeEventType(.ChildChanged, withBlock: { snapshot in
-                    if snapshot.exists() {
+                    if snapshot.exists() && !(snapshot.value is NSNull) {
                         if var json = snapshot.value as? JSONObject {
                             json[idKey] = snapshot.key
                             do {
@@ -100,7 +100,7 @@ public extension Subscribing {
                 
                 // Removals
                 query.observeEventType(.ChildRemoved, withBlock: { snapshot in
-                    if snapshot.exists() {
+                    if snapshot.exists() && !(snapshot.value is NSNull) {
                         if var json = snapshot.value as? JSONObject {
                             json[idKey] = snapshot.key
                             do {
