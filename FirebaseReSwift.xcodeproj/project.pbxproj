@@ -18,8 +18,9 @@
 		70B21BEA1CCEE5A700E329A6 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BE91CCEE5A700E329A6 /* CFNetwork.framework */; };
 		70B21BEC1CCEE5B600E329A6 /* Security.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BEB1CCEE5B600E329A6 /* Security.framework */; };
 		70B21BEE1CCEE5BF00E329A6 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BED1CCEE5BF00E329A6 /* SystemConfiguration.framework */; };
-		70B21BF01CCEE7A800E329A6 /* FirebaseNetworkAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BEF1CCEE7A800E329A6 /* FirebaseNetworkAccess.swift */; };
+		70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */; };
 		70B21BF21CCEE7E900E329A6 /* Infrastructure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF11CCEE7E900E329A6 /* Infrastructure.swift */; };
+		70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF31CCFBB3400E329A6 /* Subscribing.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -47,8 +48,9 @@
 		70B21BE91CCEE5A700E329A6 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
 		70B21BEB1CCEE5B600E329A6 /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
 		70B21BED1CCEE5BF00E329A6 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
-		70B21BEF1CCEE7A800E329A6 /* FirebaseNetworkAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseNetworkAccess.swift; sourceTree = "<group>"; };
+		70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAccess.swift; sourceTree = "<group>"; };
 		70B21BF11CCEE7E900E329A6 /* Infrastructure.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Infrastructure.swift; sourceTree = "<group>"; };
+		70B21BF31CCFBB3400E329A6 /* Subscribing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscribing.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -100,7 +102,8 @@
 			isa = PBXGroup;
 			children = (
 				70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */,
-				70B21BEF1CCEE7A800E329A6 /* FirebaseNetworkAccess.swift */,
+				70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */,
+				70B21BF31CCFBB3400E329A6 /* Subscribing.swift */,
 				70B21BF11CCEE7E900E329A6 /* Infrastructure.swift */,
 				70B21BC91CCEE25D00E329A6 /* Info.plist */,
 				70B21BE21CCEE43700E329A6 /* Frameworks */,
@@ -242,7 +245,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				70B21BF21CCEE7E900E329A6 /* Infrastructure.swift in Sources */,
-				70B21BF01CCEE7A800E329A6 /* FirebaseNetworkAccess.swift in Sources */,
+				70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */,
+				70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
