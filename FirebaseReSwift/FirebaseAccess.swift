@@ -53,7 +53,8 @@ public extension FirebaseAccess {
      - parameter state: An object of type `StateType` which resolves the generic state type
      for the return value.
      
-     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
+     type matches the `state` parameter.
      */
     public func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
@@ -74,12 +75,30 @@ public extension FirebaseAccess {
      - parameter state: An object of type `StateType` which resolves the generic state type
      for the return value.
      
-     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
+     type matches the `state` parameter.
      */
     public func createObject<T>(ref: Firebase, createNewChildId: Bool = false, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             finalRef.setValue(parameters)
+            return nil
+        }
+    }
+    
+    /**
+     Removes a Firebase object at the given ref.
+     
+     - parameter ref:   The Firebase reference to the object to be removed.
+     - parameter state: An object of type `StateType` which resolves the generic state type
+     for the return value.
+     
+     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
+     type matches the `state` parameter.
+     */
+    public func removeObject<T>(ref: Firebase, state: T) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            ref.removeValue()
             return nil
         }
     }
