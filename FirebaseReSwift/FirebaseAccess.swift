@@ -27,14 +27,14 @@ public extension FirebaseAccess {
     
     // MARK: - Public API
     
-    public func updateObject(ref: Firebase, parameters: MarshaledObject) -> FirebaseActionCreator {
+    public func updateObject<T>(ref: Firebase, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             ref.updateChildValues(parameters)
             return nil
         }
     }
     
-    public func createObject(ref: Firebase, parameters: MarshaledObject) -> FirebaseActionCreator {
+    public func createObject<T>(ref: Firebase, parameters: MarshaledObject, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             ref.setValue(parameters)
             return nil

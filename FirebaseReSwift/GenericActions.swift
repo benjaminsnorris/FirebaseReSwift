@@ -39,7 +39,7 @@ public protocol SubscribingState: StateType {
 }
 
 public struct HydrateObject<T: Hydrating>: Action {
-    var object: T
+    public var object: T
     public init(object: T) { self.object = object }
 }
 

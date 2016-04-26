@@ -21,7 +21,6 @@
 		70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */; };
 		70B21BF21CCEE7E900E329A6 /* GenericActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF11CCEE7E900E329A6 /* GenericActions.swift */; };
 		70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF31CCFBB3400E329A6 /* Subscribing.swift */; };
-		70B21BF61CCFBD5700E329A6 /* FirebaseState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF51CCFBD5700E329A6 /* FirebaseState.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,7 +51,6 @@
 		70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAccess.swift; sourceTree = "<group>"; };
 		70B21BF11CCEE7E900E329A6 /* GenericActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericActions.swift; sourceTree = "<group>"; };
 		70B21BF31CCFBB3400E329A6 /* Subscribing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscribing.swift; sourceTree = "<group>"; };
-		70B21BF51CCFBD5700E329A6 /* FirebaseState.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseState.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,7 +105,6 @@
 				70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */,
 				70B21BF31CCFBB3400E329A6 /* Subscribing.swift */,
 				70B21BF11CCEE7E900E329A6 /* GenericActions.swift */,
-				70B21BF51CCFBD5700E329A6 /* FirebaseState.swift */,
 				70B21BC91CCEE25D00E329A6 /* Info.plist */,
 				70B21BE21CCEE43700E329A6 /* Frameworks */,
 			);
@@ -247,7 +244,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70B21BF61CCFBD5700E329A6 /* FirebaseState.swift in Sources */,
 				70B21BF21CCEE7E900E329A6 /* GenericActions.swift in Sources */,
 				70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */,
 				70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */,
