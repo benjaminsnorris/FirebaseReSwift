@@ -19,7 +19,7 @@ public extension FirebaseAccess {
     
     // MARK: - Query helpers
     
-    public func newObjectId(ref: Firebase) -> String? {
+    public func newObjectId() -> String? {
         guard let id = ref.childByAutoId().key else { return nil }
         return id
     }
