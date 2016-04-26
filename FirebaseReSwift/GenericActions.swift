@@ -9,35 +9,29 @@ import Foundation
 import ReSwift
 import Marshal
 
-public protocol EndpointNaming {
-    static var endpointName: String { get }
-}
-
-public protocol Identifiable {
-    var id: String { get }
-}
-
-public typealias EndpointNamingIdentifiable = protocol<EndpointNaming, Identifiable>
-
-
 public struct ObjectAdded<T: Unmarshaling>: Action {
-    var object: T
+    public var object: T
+    public init(object: T) { self.object = object }
 }
 
 public struct ObjectChanged<T: Unmarshaling>: Action {
-    var object: T
+    public var object: T
+    public init(object: T) { self.object = object }
 }
 
 public struct ObjectRemoved<T: Unmarshaling>: Action {
-    var object: T
+    public var object: T
+    public init(object: T) { self.object = object }
 }
 
 public struct ObjectErrored<T>: Action {
-    var error: ErrorType?
+    public var error: ErrorType?
+    public init(error: ErrorType?) { self.error = error }
 }
 
 public struct ObjectSubscribed<T>: Action {
-    var subscribed: Bool
+    public var subscribed: Bool
+    public init(subscribed: Bool) { self.subscribed = subscribed }
 }
 
 public protocol SubscribingState: StateType {
@@ -46,15 +40,9 @@ public protocol SubscribingState: StateType {
 
 public struct HydrateObject<T: Hydrating>: Action {
     var object: T
+    public init(object: T) { self.object = object }
 }
 
 public protocol Hydrating {
     var hydrated: Bool { get }
 }
-
-
-public struct FirebaseState: StateType {
-    static var idKey: String { return "id" }
-}
-
-public typealias FirebaseActionCreator = Store<FirebaseState>.ActionCreator
