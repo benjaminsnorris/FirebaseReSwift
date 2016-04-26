@@ -67,7 +67,7 @@ public extension Subscribing {
     public static func subscribeToObjects<T: StateType>(query: FQuery, subscribingState: SubscribingState, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             if !subscribingState.subscribed {
-                store.dispatch(ObjectSubscribed<ObjectType>(subscribed: true))
+                store.dispatch(ObjectSubscribed<SubscribingState>(subscribed: true))
                 
                 // Additions
                 query.observeEventType(.ChildAdded, withBlock: { snapshot in
