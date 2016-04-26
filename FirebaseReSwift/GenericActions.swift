@@ -72,12 +72,3 @@ public struct ObjectSubscribed<T>: Action {
 public protocol SubscribingState: StateType {
     var subscribed: Bool { get }
 }
-
-public struct HydrateObject<T: Hydrating>: Action {
-    public var object: T
-    public init(object: T) { self.object = object }
-}
-
-public protocol Hydrating {
-    var hydrated: Bool { get }
-}

@@ -14,9 +14,9 @@ import Firebase
  This protocol is adopted by a data object in order to receive updates of that from Firebase.
  
  - Note: The object must also adopt `Unmarshaling` in order to parse JSON into an object
- of that type. It must also adopt `Hydrating` in order to dispatch hydration actions.
+ of that type.
  */
-public protocol Subscribing: Unmarshaling, Hydrating { }
+public protocol Subscribing: Unmarshaling { }
 
 public extension Subscribing {
     
@@ -58,7 +58,6 @@ public extension Subscribing {
                         do {
                             let object = try Self(object: json)
                             store.dispatch(ObjectAdded(object: object))
-                            store.dispatch(HydrateObject(object: object))
                         } catch {
                             store.dispatch(ObjectErrored<ObjectType>(error: error))
                         }
@@ -74,7 +73,6 @@ public extension Subscribing {
                         do {
                             let object = try Self(object: json)
                             store.dispatch(ObjectChanged(object: object))
-                            store.dispatch(HydrateObject(object: object))
                         } catch {
                             store.dispatch(ObjectErrored<ObjectType>(error: error))
                         }
