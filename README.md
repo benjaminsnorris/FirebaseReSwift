@@ -7,6 +7,21 @@ A small library to make working with Firebase and ReSwift easier in iOS apps
 
 1. [Requirements](#requirements)
 2. [Usage](#usage)
+  - [FirebaseAccess](#firebaseaccess)
+    - [New object id](#new-object-id)
+    - [Create object](#create-object)
+    - [Update object](#update-object)
+    - [Remove object](#remove-object)
+  - [Subscribing](#subscribing)
+    - [Subscribe to objects](#subscribe-to-objects)
+    - [Errors](#errors)
+    - [Subscribing state](#subscribing-state)
+  - [Generic Actions](#generic-actions)
+    - [Object added](#object-added)
+    - [Object changed](#object-changed)
+    - [Object removed](#object-removed)
+    - [Object errored](#object-errored)
+    - [Object subscribed](#object-subscribed)
 3. [Integration](#integration)
   - [Carthage](#carthage)
   - [Swift Package Manager](#swift-package-manager)
@@ -132,40 +147,40 @@ These are actions that can be dispatched to your store that are generic and scop
 
 Generic action indicating that an object was added from Firebase and should be stored in the app state. The action is scoped to the object type that was added.
 - Parameters:
-    - T:      The type of object that was added. Must conform to `Unmarshaling` to be parsed from JSON.
-    - object: The actual object that was added.
+    - `T`:      The type of object that was added. Must conform to `Unmarshaling` to be parsed from JSON.
+    - `object`: The actual object that was added.
 
 #### Object changed
 > `ObjectChanged<T: Unmarshaling>: Action`
 
 Generic action indicating that an object was changed in Firebase and should be modified in the app state. The action is scoped to the object type that was added.
 - Parameters:
-    - T:       The type of object that was changed. Must conform to `Unmarshaling` to be parsed from JSON.
-    - object:  The actual object that was changed.
+    - `T`:       The type of object that was changed. Must conform to `Unmarshaling` to be parsed from JSON.
+    - `object`:  The actual object that was changed.
 
 #### Object removed
 > `ObjectRemoved<T: Unmarshaling>: Action`
 
 Generic action indicating that an object was removed from Firebase and should be removed in the app state. The action is scoped to the object type that was added.
 - Parameters:
-    - T:       The type of object that was removed. Must conform to `Unmarshaling` to be parsed from JSON.
-    - object:  The actual object that was removed.
+    - `T`:       The type of object that was removed. Must conform to `Unmarshaling` to be parsed from JSON.
+    - `object`:  The actual object that was removed.
 
 #### Object errored
 > `ObjectErrored<T>: Action`
 
 Generic action indicating that an object has an error when parsing from a Firebase event. The action is scoped to the object type that was added.
 - Parameters:
-    - T:       The type of object that produced the error
-    - error:   An optional error indicating the problem that occurred
+    - `T`:       The type of object that produced the error
+    - `error`:   An optional error indicating the problem that occurred
 
 #### Object subscribed
 > `ObjectSubscribed<T>: Action`
 
 Generic action indicating that an object was subscribed to in Firebase. The action is scoped to the object type that was added.
 - Parameters:
-    - T:           The type of object that can be subscribed or not
-    - subscribed:  Flag indicating subscription status
+    - `T`:           The type of object that can be subscribed or not
+    - `subscribed`:  Flag indicating subscription status
 
 
 ## Integration
