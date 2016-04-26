@@ -15,10 +15,15 @@ A small library to make working with Firebase and ReSwift easier in iOS apps
   - [Authentication](#authentication)
     - [Get user id](#get-user-id)
     - [Log in user](#log-in-user)
+    - [Sign up user](#sign-up-user)
+    - [Change user password](#change-user-password)
+    - [Change user email](#change-user-email)
+    - [Reset password](#reset-password)
     - [Log out user](#log-out-user)
     - [Errors](#authentication-errors)
     - [Actions](#authentication-actions)
       - [User logged in](#user-logged-in)
+      - [User authentication action](#user-authentication-action)
       - [User auth failed](#user-auth-failed)
       - [User identified](#user-identified)
       - [User logged out](#user-logged-out)
@@ -131,6 +136,55 @@ Authenticates the user with email address and password. If successful, dispatche
 
 - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
 
+#### Sign up user
+> `signUpUser<T>(email: String, password: String, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Creates a user with the email address and password. On success, an action is dispatched to log the user in.
+
+- Parameters:
+   - `email`:    The user’s email address
+   - `password`: The user’s password
+   - `state`:    An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+
+#### Change user password
+> `changeUserPassword<T>(email: String, oldPassword: String, newPassword: String, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Change a user’s password.
+
+- Parameters:
+   - `email`:        The user’s email address
+   - `oldPassword`:  The previous password
+   - `newPassword`:  The new password for the user
+   - `state`:        An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns:           An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+
+#### Change user email
+> `changeUserEmail<T>(email: String, password: String, newEmail: String, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Change a user’s email address.
+
+- Parameters:
+   - `email`:        The user’s previous email address
+   - `password`:     The user’s password
+   - `newEmail`:     The new email address for the user
+   - `state`:        An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns:           An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`)  whose type matches the `state` parameter.
+
+#### Reset password
+> `resetPassword<T>(email: String, state: T) -> (state: T, store: Store<T>) -> Action?`
+
+Send the user a reset password email.
+
+- Parameters:
+   - `email`:    The user’s email address
+   - `state`:    An object of type `StateType` which resolves the generic state type for the return value.
+
+- returns:       An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+
 #### Log out user
 > `logOutUser<T>(state: T) -> (state: T, store: Store<T>) -> Action?`
 
@@ -142,21 +196,54 @@ Unauthenticates the current user and dispatches a `UserLoggedOut` action.
 
 #### Authentication errors
 ```swift
-enum FirebaseAuthenticationError: ErrorType {
-    case NoUserId
+public enum FirebaseAuthenticationError: ErrorType {
+    case LogInError(error: ErrorType)
+    case SignUpError(error: ErrorType)
+    case ChangePasswordError(error: ErrorType)
+    case ChangeEmailError(error: ErrorType)
+    case ResetPasswordError(error: ErrorType)
+    case LogInMissingUserId
 }
 ```
 
 An error that occurred authenticating with Firebase.
 
-- `NoUserId`:    The auth payload contained no user id
+- `LogInError`:            The user could not log in
+- `SignUpError`:           The user could not sign up
+- `ChangePasswordError`:   The password for the user could not be changed
+- `ChangeEmailError`:      The email for the user could not be chagned
+- `ResetPasswordError`:    The password for the user could not be reset
+- `LogInMissingUserId`:    The auth payload contained no user id
 
 #### Authentication actions
+```swift
+public enum FirebaseAuthenticationAction {
+    case UserSignedUp(email: String, password: String)
+    case PasswordChanged
+    case EmailChanged
+    case PasswordReset
+}
+```
+
+An action type regarding user authentication
+
+- `UserSignedUp`:      The user successfully signed up
+- `PasswordChanged`:   The password for the user was successfully changed
+- `EmailChanged`:      The email for the user was successfully changed
+- `PasswordReset`:     The user was sent a reset password email
+
+
 ##### User logged in
 > `UserLoggedIn: Action`
 
 Action indicating that the user has just successfully logged in with email and password.
 - Parameter `userId`: The id of the user
+
+##### User authentication action
+> `UserAuthenticationAction: Action`
+
+General action regarding user authentication
+- Parameter `action`: The authentication action that occurred
 
 ##### User auth failed
 > `UserAuthFailed: Action`
