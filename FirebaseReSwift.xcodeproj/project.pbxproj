@@ -21,6 +21,7 @@
 		70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */; };
 		70B21BF21CCEE7E900E329A6 /* GenericActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF11CCEE7E900E329A6 /* GenericActions.swift */; };
 		70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF31CCFBB3400E329A6 /* Subscribing.swift */; };
+		70B21BFC1CD0136700E329A6 /* FirebaseAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BFB1CD0136700E329A6 /* FirebaseAuthentication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -51,6 +52,7 @@
 		70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAccess.swift; sourceTree = "<group>"; };
 		70B21BF11CCEE7E900E329A6 /* GenericActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericActions.swift; sourceTree = "<group>"; };
 		70B21BF31CCFBB3400E329A6 /* Subscribing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscribing.swift; sourceTree = "<group>"; };
+		70B21BFB1CD0136700E329A6 /* FirebaseAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAuthentication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			children = (
 				70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */,
 				70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */,
+				70B21BFB1CD0136700E329A6 /* FirebaseAuthentication.swift */,
 				70B21BF31CCFBB3400E329A6 /* Subscribing.swift */,
 				70B21BF11CCEE7E900E329A6 /* GenericActions.swift */,
 				70B21BC91CCEE25D00E329A6 /* Info.plist */,
@@ -244,6 +247,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70B21BFC1CD0136700E329A6 /* FirebaseAuthentication.swift in Sources */,
 				70B21BF21CCEE7E900E329A6 /* GenericActions.swift in Sources */,
 				70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */,
 				70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */,
