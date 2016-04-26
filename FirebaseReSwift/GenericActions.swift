@@ -52,8 +52,8 @@ public struct ObjectRemoved<T: Unmarshaling>: Action {
  - parameter error: An optional error indicating the problem that occurred
  */
 public struct ObjectErrored<T>: Action {
-    public var error: ErrorType?
-    public init(error: ErrorType?) { self.error = error }
+    public var error: ErrorType
+    public init(error: ErrorType) { self.error = error }
 }
 
 /**

@@ -11,6 +11,17 @@ import ReSwift
 import Firebase
 
 /**
+ An error that occurred parsing data from a Firebase event.
+ 
+ - `NoData`:    The snapshot for the event contained no data
+ - `MalformedData`:  The data in the snapshot could not be parsed as JSON
+ */
+enum FirebaseSubscriptionError: ErrorType {
+    case NoData(path: String)
+    case MalformedData(path: String)
+}
+
+/**
  This protocol is adopted by a data object in order to receive updates of that from Firebase.
  
  - Note: The object must also adopt `Unmarshaling` in order to parse JSON into an object
@@ -53,46 +64,55 @@ public extension Subscribing {
                 
                 // Additions
                 query.observeEventType(.ChildAdded, withBlock: { snapshot in
-                    if var json = snapshot.value as? JSONObject where snapshot.exists() {
-                        json[idKey] = snapshot.key
-                        do {
-                            let object = try Self(object: json)
-                            store.dispatch(ObjectAdded(object: object))
-                        } catch {
-                            store.dispatch(ObjectErrored<ObjectType>(error: error))
+                    if snapshot.exists() {
+                        if var json = snapshot.value as? JSONObject {
+                            json[idKey] = snapshot.key
+                            do {
+                                let object = try Self(object: json)
+                                store.dispatch(ObjectAdded(object: object))
+                            } catch {
+                                store.dispatch(ObjectErrored<ObjectType>(error: error))
+                            }
+                        } else {
+                            store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
                         }
-                    } else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: nil))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
                 
                 // Changes
                 query.observeEventType(.ChildChanged, withBlock: { snapshot in
-                    if var json = snapshot.value as? JSONObject where snapshot.exists() {
-                        json[idKey] = snapshot.key
-                        do {
-                            let object = try Self(object: json)
-                            store.dispatch(ObjectChanged(object: object))
-                        } catch {
-                            store.dispatch(ObjectErrored<ObjectType>(error: error))
+                    if snapshot.exists() {
+                        if var json = snapshot.value as? JSONObject {
+                            json[idKey] = snapshot.key
+                            do {
+                                let object = try Self(object: json)
+                                store.dispatch(ObjectChanged(object: object))
+                            } catch {
+                                store.dispatch(ObjectErrored<ObjectType>(error: error))
+                            }
+                        } else {
+                            store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
                         }
-                    } else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: nil))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
                 
                 // Removals
                 query.observeEventType(.ChildRemoved, withBlock: { snapshot in
-                    if var json = snapshot.value as? JSONObject where snapshot.exists() {
-                        json[idKey] = snapshot.key
-                        do {
-                            let object = try Self(object: json)
-                            store.dispatch(ObjectRemoved(object: object))
-                        } catch {
-                            store.dispatch(ObjectErrored<ObjectType>(error: error))
+                    if snapshot.exists() {
+                        if var json = snapshot.value as? JSONObject {
+                            json[idKey] = snapshot.key
+                            do {
+                                let object = try Self(object: json)
+                                store.dispatch(ObjectRemoved(object: object))
+                            } catch {
+                                store.dispatch(ObjectErrored<ObjectType>(error: error))
+                            }
+                        } else {
+                            store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
                         }
-                    } else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: nil))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
             }
