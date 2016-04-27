@@ -13,11 +13,10 @@ import Marshal
  Generic action indicating that an object was added from Firebase and should be stored
  in the app state. The action is scoped to the object type that was added.
  - Parameters:
-     - T:       The type of object that was added. Must conform to `Unmarshaling` to be
-     parsed from JSON.
+     - T:       The type of object that was added.
      - object:  The actual object that was added.
  */
-public struct ObjectAdded<T: Unmarshaling>: Action {
+public struct ObjectAdded<T>: Action {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -26,11 +25,10 @@ public struct ObjectAdded<T: Unmarshaling>: Action {
  Generic action indicating that an object was changed in Firebase and should be modified
  in the app state. The action is scoped to the object type that was added.
  - Parameters:
-     - T:       The type of object that was changed. Must conform to `Unmarshaling` to be
-     parsed from JSON.
+     - T:       The type of object that was changed.
      - object:  The actual object that was changed.
  */
-public struct ObjectChanged<T: Unmarshaling>: Action {
+public struct ObjectChanged<T>: Action {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -39,11 +37,10 @@ public struct ObjectChanged<T: Unmarshaling>: Action {
  Generic action indicating that an object was removed from Firebase and should be removed
  in the app state. The action is scoped to the object type that was added.
  - Parameters:
-     - T:       The type of object that was removed. Must conform to `Unmarshaling` to be
-     parsed from JSON.
+     - T:       The type of object that was removed.
      - object:  The actual object that was removed.
  */
-public struct ObjectRemoved<T: Unmarshaling>: Action {
+public struct ObjectRemoved<T>: Action {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -62,12 +59,12 @@ public struct ObjectErrored<T>: Action {
 
 /**
  Generic action indicating that an object was subscribed to in Firebase.
- The action is scoped to the type of state that tracks the subscription status.
+ The action is scoped to whatever you need to track the subscription status.
  - Parameters:
      - T:           The type of state that can be subscribed or not
      - subscribed:  Flag indicating subscription status
  */
-public struct ObjectSubscribed<T: SubscribingState>: Action {
+public struct ObjectSubscribed<T>: Action {
     public var subscribed: Bool
     public init(subscribed: Bool) { self.subscribed = subscribed }
 }

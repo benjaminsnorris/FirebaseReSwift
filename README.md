@@ -308,27 +308,27 @@ A protocol to be adopted by sub states that hold a flag indicating whether an ob
 These are actions that can be dispatched to your store that are generic and scoped to a data object that you associate. This allows them to be easily parsed in your reducers.
 
 #### Object added
-> `ObjectAdded<T: Unmarshaling>: Action`
+> `ObjectAdded<T>: Action`
 
 Generic action indicating that an object was added from Firebase and should be stored in the app state. The action is scoped to the object type that was added.
 - Parameters:
-    - `T`:      The type of object that was added. Must conform to `Unmarshaling` to be parsed from JSON.
+    - `T`:      The type of object that was added.
     - `object`: The actual object that was added.
 
 #### Object changed
-> `ObjectChanged<T: Unmarshaling>: Action`
+> `ObjectChanged<T>: Action`
 
 Generic action indicating that an object was changed in Firebase and should be modified in the app state. The action is scoped to the object type that was added.
 - Parameters:
-    - `T`:       The type of object that was changed. Must conform to `Unmarshaling` to be parsed from JSON.
+    - `T`:       The type of object that was changed.
     - `object`:  The actual object that was changed.
 
 #### Object removed
-> `ObjectRemoved<T: Unmarshaling>: Action`
+> `ObjectRemoved<T>: Action`
 
 Generic action indicating that an object was removed from Firebase and should be removed in the app state. The action is scoped to the object type that was added.
 - Parameters:
-    - `T`:       The type of object that was removed. Must conform to `Unmarshaling` to be parsed from JSON.
+    - `T`:       The type of object that was removed.
     - `object`:  The actual object that was removed.
 
 #### Object errored
@@ -340,10 +340,10 @@ Generic action indicating that an object has an error when parsing from a Fireba
     - `error`:   An optional error indicating the problem that occurred
 
 #### Object subscribed
-> `ObjectSubscribed<T: SubscribingState>: Action`
+> `ObjectSubscribed<T>: Action`
 
 Generic action indicating that an object was subscribed to in Firebase.
-The action is scoped to the type of state that tracks the subscription status.
+The action is scoped to whatever you need to track the subscription status.
 - Parameters:
     - `T`:           The type of state that can be subscribed or not
     - `subscribed`:  Flag indicating subscription status
