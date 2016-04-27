@@ -64,10 +64,10 @@ public extension Subscribing {
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
      */
-    public static func subscribeToObjects<T: StateType>(query: FQuery, subscribingState: SubscribingState, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public static func subscribeToObjects<T: StateType, U: SubscribingState>(query: FQuery, subscribingState: U, state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             if !subscribingState.subscribed {
-                store.dispatch(ObjectSubscribed<SubscribingState>(subscribed: true))
+                store.dispatch(ObjectSubscribed<U>(subscribed: true))
                 
                 // Additions
                 query.observeEventType(.ChildAdded, withBlock: { snapshot in

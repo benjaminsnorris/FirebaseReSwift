@@ -269,7 +269,7 @@ This protocol is adopted by a data object in order to receive updates of that fr
 - **Note:** The object must also adopt `Unmarshaling` in order to parse JSON into an object of that type.
 
 #### Subscribe to objects
-> `subscribeToObjects<T: StateType>(query: FQuery, subscribingState: SubscribingState, state: T) -> (state: T, store: Store<T>) -> Action?`
+> `subscribeToObjects<T: StateType, U: SubscribingState>(query: FQuery, subscribingState: U, state: T) -> (state: T, store: Store<T>) -> Action?`
 
 Calling this function results in the dispatching actions to the store for the following events that occur in Firebase matching the given query. The actions are generic actions scoped to the data object on which the function is called.
 
@@ -340,11 +340,12 @@ Generic action indicating that an object has an error when parsing from a Fireba
     - `error`:   An optional error indicating the problem that occurred
 
 #### Object subscribed
-> `ObjectSubscribed<T>: Action`
+> `ObjectSubscribed<T: SubscribingState>: Action`
 
-Generic action indicating that an object was subscribed to in Firebase. The action is scoped to the object type that was added.
+Generic action indicating that an object was subscribed to in Firebase.
+The action is scoped to the type of state that tracks the subscription status.
 - Parameters:
-    - `T`:           The type of object that can be subscribed or not
+    - `T`:           The type of state that can be subscribed or not
     - `subscribed`:  Flag indicating subscription status
 
 

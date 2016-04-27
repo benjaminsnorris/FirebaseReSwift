@@ -62,12 +62,12 @@ public struct ObjectErrored<T>: Action {
 
 /**
  Generic action indicating that an object was subscribed to in Firebase.
- The action is scoped to the object type that was added.
+ The action is scoped to the type of state that tracks the subscription status.
  - Parameters:
-     - T:           The type of object that can be subscribed or not
+     - T:           The type of state that can be subscribed or not
      - subscribed:  Flag indicating subscription status
  */
-public struct ObjectSubscribed<T>: Action {
+public struct ObjectSubscribed<T: SubscribingState>: Action {
     public var subscribed: Bool
     public init(subscribed: Bool) { self.subscribed = subscribed }
 }
