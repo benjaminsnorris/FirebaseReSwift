@@ -122,6 +122,8 @@ public extension Subscribing {
                         store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
+                
+                return ActionCreatorDispatched()
             }
             
             return nil

@@ -37,6 +37,8 @@ A small library to make working with Firebase and ReSwift easier in iOS apps
     - [Object removed](#object-removed)
     - [Object errored](#object-errored)
     - [Object subscribed](#object-subscribed)
+    - [Action creator dispatched](#action-creator-dispatched)
+    - [Firebase data changed](#firebase-data-changed)
 3. [Integration](#integration)
   - [Carthage](#carthage)
   - [Swift Package Manager](#swift-package-manager)
@@ -347,6 +349,20 @@ The action is scoped to whatever you need to track the subscription status.
 - Parameters:
     - `T`:           The type of state that can be subscribed or not
     - `subscribed`:  Flag indicating subscription status
+
+#### Action creator dispatched
+> `ActionCreatorDispatched: Action`
+
+Placeholder action to indicate that an action creator was dispatched.
+
+**Usage:** Return an action of this type instead of nil when dispatching an action creator.
+
+#### Firebase data changed
+> `FirebaseDataChanged: Action`
+
+Placeholder action to indicate that data was changed in Firebase.
+
+**Usage:** Return an action of this type when nothing is being dispatched, but data has been changed in Firebase.
 
 
 ## Integration
