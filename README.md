@@ -356,6 +356,7 @@ The action is scoped to whatever you need to track the subscription status.
 Placeholder action to indicate that an action creator was dispatched.
 
 **Usage:** Return an action of this type instead of nil when dispatching an action creator.
+- Parameter dispatchedIn: The name of the function where the dispatching occurred
 
 #### Firebase data changed
 > `FirebaseDataChanged: Action`
@@ -363,6 +364,7 @@ Placeholder action to indicate that an action creator was dispatched.
 Placeholder action to indicate that data was changed in Firebase.
 
 **Usage:** Return an action of this type when nothing is being dispatched, but data has been changed in Firebase.
+- Parameter changedIn: The name of the function where the change occurred
 
 
 ## Integration

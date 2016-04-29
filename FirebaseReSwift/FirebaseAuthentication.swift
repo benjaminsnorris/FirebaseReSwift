@@ -141,7 +141,7 @@ public extension FirebaseAccess {
                     store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.PasswordChanged))
                 }
             }
-            return ActionCreatorDispatched()
+            return ActionCreatorDispatched(dispatchedIn: "changeUserPassword")
         }
     }
     
@@ -167,7 +167,7 @@ public extension FirebaseAccess {
                     store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.EmailChanged))
                 }
             }
-            return ActionCreatorDispatched()
+            return ActionCreatorDispatched(dispatchedIn: "changeUserEmail")
         }
     }
     
@@ -191,7 +191,7 @@ public extension FirebaseAccess {
                     store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.PasswordReset))
                 }
             }
-            return ActionCreatorDispatched()
+            return ActionCreatorDispatched(dispatchedIn: "resetPassword")
         }
     }
     
@@ -208,7 +208,7 @@ public extension FirebaseAccess {
         return { state, store in
             self.ref.unauth()
             store.dispatch(UserLoggedOut())
-            return ActionCreatorDispatched()
+            return ActionCreatorDispatched(dispatchedIn: "logOutUser")
         }
     }
 
