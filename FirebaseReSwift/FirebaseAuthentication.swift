@@ -37,7 +37,7 @@ public enum FirebaseAuthenticationError: ErrorType {
  - `PasswordReset`:     The user was sent a reset password email
  */
 public enum FirebaseAuthenticationAction {
-    case UserSignedUp(email: String, password: String)
+    case UserSignedUp
     case PasswordChanged
     case EmailChanged
     case PasswordReset
@@ -57,6 +57,7 @@ public extension FirebaseAccess {
      */
     public func getUserId<T>(state: T) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
+            // TODO: Check on expired token with refresh
             guard let authData = self.ref.authData, userId = authData.uid else { return nil }
             store.dispatch(UserIdentified(userId: userId))
             return nil
@@ -111,7 +112,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
                 } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.UserSignedUp(email: email, password: password)))
+                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.UserSignedUp()))
                     store.dispatch(self.logInUser(email, password: password, state: state))
                 }
             })
