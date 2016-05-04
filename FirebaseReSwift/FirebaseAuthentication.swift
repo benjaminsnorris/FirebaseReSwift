@@ -112,7 +112,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
                 } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.UserSignedUp()))
+                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.UserSignedUp))
                     store.dispatch(self.logInUser(email, password: password, state: state))
                 }
             })
