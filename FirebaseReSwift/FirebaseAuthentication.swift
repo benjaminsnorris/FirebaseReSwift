@@ -48,20 +48,15 @@ public extension FirebaseAccess {
     /**
      Attempts to retrieve the user's authentication id. If successful, dispatches an action
      with the id (`UserIdentified`).
-     
-     - Parameter state: An object of type `StateType` which resolves the generic state type
-     for the return value.
 
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the `state` parameter.
+     type matches the state type associated with the store on which it is dispatched.
      */
-    public func getUserId<T>(state: T) -> (state: T, store: Store<T>) -> Action? {
-        return { state, store in
-            // TODO: Check on expired token with refresh
-            guard let authData = self.ref.authData, userId = authData.uid else { return nil }
-            store.dispatch(UserIdentified(userId: userId))
-            return nil
-        }
+    public func getUserId<T: StateType>(state: T, store: Store<T>) -> Action? {
+        // TODO: Check on expired token with refresh
+        guard let authData = ref.authData, userId = authData.uid else { return nil }
+        store.dispatch(UserIdentified(userId: userId))
+        return ActionCreatorDispatched(dispatchedIn: "getUserId")
     }
     
     /**
@@ -72,13 +67,11 @@ public extension FirebaseAccess {
      - Parameters:
         - email:    The user’s email address
         - password: The user’s password
-        - state:    An object of type `StateType` which resolves the generic state type
-        for the return value.
      
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the `state` parameter.
+     type matches the state type associated with the store on which it is dispatched.
      */
-    func logInUser<T>(email: String, password: String, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.ref.authUser(email, password: password) { error, auth in
                 if let error = error {
@@ -100,20 +93,18 @@ public extension FirebaseAccess {
      - Parameters:
         - email:    The user’s email address
         - password: The user’s password
-        - state:    An object of type `StateType` which resolves the generic state type
-        for the return value.
      
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the `state` parameter.
+     type matches the state type associated with the store on which it is dispatched.
      */
-    func signUpUser<T>(email: String, password: String, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.ref.createUser(email, password: password, withValueCompletionBlock: { error, object in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
                 } else {
                     store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.UserSignedUp))
-                    store.dispatch(self.logInUser(email, password: password, state: state))
+                    store.dispatch(self.logInUser(email, password: password))
                 }
             })
             return nil
@@ -127,13 +118,11 @@ public extension FirebaseAccess {
         - email:        The user’s email address
         - oldPassword:  The previous password
         - newPassword:  The new password for the user
-        - state:        An object of type `StateType` which resolves the generic state type
-        for the return value.
      
-     - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) 
-     whose type matches the `state` parameter.
+     - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the state type associated with the store on which it is dispatched.
      */
-    func changeUserPassword<T>(email: String, oldPassword: String, newPassword: String, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public func changeUserPassword<T: StateType>(email: String, oldPassword: String, newPassword: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.ref.changePasswordForUser(email, fromOld: oldPassword, toNew: newPassword) { error in
                 if let error = error {
@@ -153,13 +142,11 @@ public extension FirebaseAccess {
         - email:        The user’s previous email address
         - password:     The user’s password
         - newEmail:     The new email address for the user
-        - state:        An object of type `StateType` which resolves the generic state type
-        for the return value.
      
-     - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) 
-     whose type matches the `state` parameter.
+     - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the state type associated with the store on which it is dispatched.
      */
-    func changeUserEmail<T>(email: String, password: String, newEmail: String, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public func changeUserEmail<T: StateType>(email: String, password: String, newEmail: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.ref.changeEmailForUser(email, password: password, toNewEmail: newEmail) { error in
                 if let error = error {
@@ -177,13 +164,11 @@ public extension FirebaseAccess {
      
      - Parameters:
         - email:    The user’s email address
-        - state:    An object of type `StateType` which resolves the generic state type
-        for the return value.
      
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the `state` parameter.
+     type matches the state type associated with the store on which it is dispatched.
      */
-    func resetPassword<T>(email: String, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public func resetPassword<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.ref.resetPasswordForUser(email) { error in
                 if let error = error {
@@ -199,18 +184,13 @@ public extension FirebaseAccess {
     /**
      Unauthenticates the current user and dispatches a `UserLoggedOut` action.
      
-     - Parameter state: An object of type `StateType` which resolves the generic state type
-     for the return value.
-     
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the `state` parameter.
+     type matches the state type associated with the store on which it is dispatched.
      */
-    public func logOutUser<T>(state: T) -> (state: T, store: Store<T>) -> Action? {
-        return { state, store in
-            self.ref.unauth()
-            store.dispatch(UserLoggedOut())
-            return ActionCreatorDispatched(dispatchedIn: "logOutUser")
-        }
+    public func logOutUser<T: StateType>(state: T, store: Store<T>) -> Action? {
+        ref.unauth()
+        store.dispatch(UserLoggedOut())
+        return ActionCreatorDispatched(dispatchedIn: "logOutUser")
     }
 
 }
