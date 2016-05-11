@@ -59,12 +59,11 @@ public extension Subscribing {
          `FQuery` functions.
          - subscribingState:  A state object that provides information on whether the
          object has already been subscribed to or not.
-         - state: An object of type `StateType` which resolves the generic state type
-         for the return value.
      
-     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose type matches the `state` parameter.
+     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the state type associated with the store on which it is dispatched.
      */
-    public static func subscribeToObjects<T: StateType, U: SubscribingState>(query: FQuery, subscribingState: U, state: T) -> (state: T, store: Store<T>) -> Action? {
+    public static func subscribeToObjects<T: StateType, U: SubscribingState>(query: FQuery, subscribingState: U) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             if !subscribingState.subscribed {
                 store.dispatch(ObjectSubscribed<U>(subscribed: true))
