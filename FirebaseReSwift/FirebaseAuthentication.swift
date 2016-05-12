@@ -19,6 +19,7 @@ import Marshal
  - `ChangeEmailError`:      The email for the user could not be chagned
  - `ResetPasswordError`:    The password for the user could not be reset
  - `LogInMissingUserId`:    The auth payload contained no user id
+ - `CurrentUserNotFound`:   The data for the current user could not be found
  */
 public enum FirebaseAuthenticationError: ErrorType {
     case LogInError(error: ErrorType)
@@ -27,6 +28,7 @@ public enum FirebaseAuthenticationError: ErrorType {
     case ChangeEmailError(error: ErrorType)
     case ResetPasswordError(error: ErrorType)
     case LogInMissingUserId
+    case CurrentUserNotFound
 }
 
 /**
@@ -47,60 +49,30 @@ public enum FirebaseAuthenticationAction {
 public extension FirebaseAccess {
 
     /**
-     Attempts to retrieve the user's authentication id. If successful, dispatches an action
-     with the id (`UserIdentified`).
+     Attempts to retrieve the user's authentication id. If successful, it is returned
      
-     - Parameters:
-     - completion:   A closure to run after retrieving the current user id
-
-     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the state type associated with the store on which it is dispatched.
+     - returns: The user's authentication id, or nil if not authenticated
      */
-    public func getUserId<T: StateType>(completion: (userId: String?) -> Void) -> (state: T, store: Store<T>) -> Action? {
-        return { state, store in
-            // TODO: Check on expired token with refresh
-            guard let authData = self.ref.authData, userId = authData.uid else { completion(userId: nil); return nil }
-            store.dispatch(UserIdentified(userId: userId))
-            completion(userId: userId)
-            return ActionCreatorDispatched(dispatchedIn: "getUserId")
-        }
+    public func getUserId() -> String? {
+        guard let authData = self.ref.authData, userId = authData.uid else { return nil }
+        return userId
     }
     
     /**
-     Attempts to load current user information. Passes the object into the completion block
+     Attempts to load current user information. Passes the JSON data for the current user
+     to the completion handler
      
      - Parameters:
         - ref:          A Firebase reference to the current user object
         - completion:   A closure to run after retrieving the current user data and parsing it
-     
-     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the state type associated with the store on which it is dispatched.
      */
-    public func getCurrentUser<T: Unmarshaling, U: StateType>(currentUserRef: Firebase, completion: (user: T?) -> Void) -> (state: U, store: Store<U>) -> Action? {
-        return { state, store in
-            currentUserRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
-                guard snapshot.exists() && !(snapshot.value is NSNull) else {
-                    store.dispatch(ObjectErrored<T>(error: FirebaseSubscriptionError.NoData(path: currentUserRef.description())))
-                    completion(user: nil)
-                    return
-                }
-                guard var json = snapshot.value as? JSONObject else {
-                    store.dispatch(ObjectErrored<T>(error: FirebaseSubscriptionError.MalformedData(path: currentUserRef.description())))
-                    completion(user: nil)
-                    return
-                }
-                json["id"] = snapshot.key
-                do {
-                    let object = try T(object: json)
-                    store.dispatch(ObjectAdded(object: object))
-                    completion(user: object)
-                } catch {
-                    store.dispatch(ObjectErrored<T>(error: error))
-                    completion(user: nil)
-                }
-            })
-            return ActionCreatorDispatched(dispatchedIn: "getCurrentUser")
-        }
+    public func getCurrentUser(currentUserRef: Firebase, completion: (userJSON: MarshaledObject?) -> Void) {
+        currentUserRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(userJSON: nil); return }
+            guard var json = snapshot.value as? JSONObject else { completion(userJSON: nil); return }
+            json["id"] = snapshot.key
+            completion(userJSON: json)
+        })
     }
     
     /**
