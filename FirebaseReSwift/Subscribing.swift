@@ -22,7 +22,7 @@ public protocol SubscribingState: StateType {
  - `NoData`:    The snapshot for the event contained no data
  - `MalformedData`:  The data in the snapshot could not be parsed as JSON
  */
-enum FirebaseSubscriptionError: ErrorType {
+public enum FirebaseSubscriptionError: ErrorType {
     case NoData(path: String)
     case MalformedData(path: String)
 }
