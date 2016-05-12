@@ -8,6 +8,7 @@
 import Foundation
 import Firebase
 import ReSwift
+import Marshal
 
 /**
  An error that occurred authenticating with Firebase.
@@ -57,6 +58,40 @@ public extension FirebaseAccess {
         guard let authData = ref.authData, userId = authData.uid else { return nil }
         store.dispatch(UserIdentified(userId: userId))
         return ActionCreatorDispatched(dispatchedIn: "getUserId")
+    }
+    
+    /**
+     Attempts to load current user information. Passes the object into the completion block
+     
+     - Parameters:
+        - ref:          A Firebase reference to the current user object
+        - completion:   A closure to run after retrieving the current user data and parsing it
+     */
+    public func getCurrentUser<T: Unmarshaling, U: StateType>(currentUserRef: Firebase, completion: (user: T?) -> Void) -> (state: U, store: Store<U>) -> Action? {
+        return { state, store in
+            currentUserRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
+                guard snapshot.exists() && !(snapshot.value is NSNull) else {
+                    store.dispatch(ObjectErrored<T>(error: FirebaseSubscriptionError.NoData(path: currentUserRef.description())))
+                    completion(user: nil)
+                    return
+                }
+                guard var json = snapshot.value as? JSONObject else {
+                    store.dispatch(ObjectErrored<T>(error: FirebaseSubscriptionError.MalformedData(path: currentUserRef.description())))
+                    completion(user: nil)
+                    return
+                }
+                json["id"] = snapshot.key
+                do {
+                    let object = try T(object: json)
+                    store.dispatch(ObjectAdded(object: object))
+                    completion(user: object)
+                } catch {
+                    store.dispatch(ObjectErrored<T>(error: error))
+                    completion(user: nil)
+                }
+            })
+            return ActionCreatorDispatched(dispatchedIn: "getCurrentUser")
+        }
     }
     
     /**
