@@ -44,6 +44,7 @@ public protocol FirebaseAccess {
     // MARK: - Overridable authentication functions
     
     func getUserId<T: StateType>(state: T, store: Store<T>) -> Action?
+    func getCurrentUser<T: Unmarshaling, U: StateType>(currentUserRef: Firebase, completion: (user: T?) -> Void) -> (state: U, store: Store<U>) -> Action?
     func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
     func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
     func changeUserPassword<T: StateType>(email: String, oldPassword: String, newPassword: String) -> (state: T, store: Store<T>) -> Action?
