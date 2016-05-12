@@ -82,6 +82,7 @@ public extension Subscribing {
                         } else {
                             store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
                         }
+                    } else {
                         store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
@@ -100,6 +101,7 @@ public extension Subscribing {
                         } else {
                             store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
                         }
+                    } else {
                         store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
@@ -118,6 +120,7 @@ public extension Subscribing {
                         } else {
                             store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
                         }
+                    } else {
                         store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
                     }
                 })
