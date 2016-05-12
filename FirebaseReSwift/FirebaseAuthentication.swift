@@ -49,15 +49,21 @@ public extension FirebaseAccess {
     /**
      Attempts to retrieve the user's authentication id. If successful, dispatches an action
      with the id (`UserIdentified`).
+     
+     - Parameters:
+     - completion:   A closure to run after retrieving the current user id
 
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func getUserId<T: StateType>(state: T, store: Store<T>) -> Action? {
-        // TODO: Check on expired token with refresh
-        guard let authData = ref.authData, userId = authData.uid else { return nil }
-        store.dispatch(UserIdentified(userId: userId))
-        return ActionCreatorDispatched(dispatchedIn: "getUserId")
+    public func getUserId<T: StateType>(completion: (userId: String?) -> Void) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            // TODO: Check on expired token with refresh
+            guard let authData = self.ref.authData, userId = authData.uid else { completion(userId: nil); return nil }
+            store.dispatch(UserIdentified(userId: userId))
+            completion(userId: userId)
+            return ActionCreatorDispatched(dispatchedIn: "getUserId")
+        }
     }
     
     /**
@@ -66,6 +72,9 @@ public extension FirebaseAccess {
      - Parameters:
         - ref:          A Firebase reference to the current user object
         - completion:   A closure to run after retrieving the current user data and parsing it
+     
+     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the state type associated with the store on which it is dispatched.
      */
     public func getCurrentUser<T: Unmarshaling, U: StateType>(currentUserRef: Firebase, completion: (user: T?) -> Void) -> (state: U, store: Store<U>) -> Action? {
         return { state, store in
