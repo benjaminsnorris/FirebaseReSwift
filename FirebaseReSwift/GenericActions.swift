@@ -68,26 +68,3 @@ public struct ObjectSubscribed<T>: Action {
     public var subscribed: Bool
     public init(subscribed: Bool) { self.subscribed = subscribed }
 }
-
-/**
- Placeholder action to indicate that an action creator was dispatched.
- 
- **Usage:** Return an action of this type instead of nil when dispatching an action creator.
- - Parameter dispatchedIn: The name of the function where the dispatching occurred
- */
-public struct ActionCreatorDispatched: Action {
-    public var dispatchedIn: String
-    public init(dispatchedIn: String) { self.dispatchedIn = dispatchedIn }
-}
-
-/**
- Placeholder action to indicate that data was changed in Firebase.
- 
- **Usage:** Return an action of this type when nothing is being dispatched, but data has
- been changed in Firebase.
- - Parameter changedIn: The name of the function where the change occurred
- */
-public struct FirebaseDataChanged: Action {
-    public var changedIn: String
-    public init(changedIn: String) { self.changedIn = changedIn }
-}

@@ -125,7 +125,7 @@ public extension Subscribing {
                     }
                 })
                 
-                return ActionCreatorDispatched(dispatchedIn: "subscribeToObjects")
+                return nil
             }
             
             return nil

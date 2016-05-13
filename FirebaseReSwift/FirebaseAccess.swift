@@ -81,7 +81,7 @@ public extension FirebaseAccess {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             finalRef.setValue(parameters)
-            return FirebaseDataChanged(changedIn: "createObject")
+            return nil
         }
     }
     
@@ -100,7 +100,7 @@ public extension FirebaseAccess {
     public func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             ref.updateChildValues(parameters)
-            return FirebaseDataChanged(changedIn: "updateObject")
+            return nil
         }
     }
     
@@ -116,7 +116,7 @@ public extension FirebaseAccess {
     public func removeObject<T: StateType>(ref: Firebase) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             ref.removeValue()
-            return FirebaseDataChanged(changedIn: "removeObject")
+            return nil
         }
     }
     
