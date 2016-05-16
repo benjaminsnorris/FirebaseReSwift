@@ -14,6 +14,7 @@ import Firebase
 /// has been subscribed to in Firebase or not.
 public protocol SubscribingState: StateType {
     var subscribed: Bool { get }
+    associatedtype SubscribingObject: Unmarshaling
 }
 
 /**
@@ -33,12 +34,11 @@ public enum FirebaseSubscriptionError: ErrorType {
  - Note: The object must also adopt `Unmarshaling` in order to parse JSON into an object
  of that type.
  */
-public protocol Subscribing: Unmarshaling { }
 
-public extension Subscribing {
+public extension SubscribingState {
     
-    typealias ObjectType = Self
-    private static var idKey: String { return "id" }
+    typealias SubscribingType = Self
+    typealias ObjectType = Self.SubscribingObject
     
     /**
      Calling this function results in the dispatching actions to the store for the following
@@ -63,10 +63,12 @@ public extension Subscribing {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public static func subscribeToObjects<T: StateType, U: SubscribingState>(query: FQuery, subscribingState: U) -> (state: T, store: Store<T>) -> Action? {
+    public func subscribeToObjects<T: StateType>(query: FQuery) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            if !subscribingState.subscribed {
-                store.dispatch(ObjectSubscribed<U>(subscribed: true))
+            if !self.subscribed {
+                store.dispatch(ObjectSubscribed<SubscribingType>(subscribed: true))
+                
+                let idKey = "id"
                 
                 // Additions
                 query.observeEventType(.ChildAdded, withBlock: { snapshot in
@@ -80,7 +82,7 @@ public extension Subscribing {
                     }
                     json[idKey] = snapshot.key
                     do {
-                        let object = try Self(object: json)
+                        let object = try ObjectType(object: json)
                         store.dispatch(ObjectAdded(object: object))
                     } catch {
                         store.dispatch(ObjectErrored<ObjectType>(error: error))
@@ -99,7 +101,7 @@ public extension Subscribing {
                     }
                     json[idKey] = snapshot.key
                     do {
-                        let object = try Self(object: json)
+                        let object = try ObjectType(object: json)
                         store.dispatch(ObjectChanged(object: object))
                     } catch {
                         store.dispatch(ObjectErrored<ObjectType>(error: error))
@@ -118,7 +120,7 @@ public extension Subscribing {
                     }
                     json[idKey] = snapshot.key
                     do {
-                        let object = try Self(object: json)
+                        let object = try ObjectType(object: json)
                         store.dispatch(ObjectRemoved(object: object))
                     } catch {
                         store.dispatch(ObjectErrored<ObjectType>(error: error))
