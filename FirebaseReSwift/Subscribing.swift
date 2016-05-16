@@ -34,7 +34,8 @@ public enum FirebaseSubscriptionError: ErrorType {
 }
 
 /**
- This protocol is adopted by a data object in order to receive updates of that from Firebase.
+ This protocol is adopted by a state object in order to receive updates of a specific
+ data object from Firebase.
  
  - Note: The object must also adopt `Unmarshaling` in order to parse JSON into an object
  of that type.
@@ -62,8 +63,6 @@ public extension SubscribingState {
          - query: The Firebase query to which to subscribe. This is usually
          constructed from the base `ref` using `childByAppendingPath(_)` or other 
          `FQuery` functions.
-         - subscribingState:  A state object that provides information on whether the
-         object has already been subscribed to or not.
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
