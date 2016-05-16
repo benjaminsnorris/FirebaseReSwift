@@ -14,7 +14,12 @@ import Firebase
 /// has been subscribed to in Firebase or not.
 public protocol SubscribingState: StateType {
     var subscribed: Bool { get }
-    associatedtype SubscribingObject: Unmarshaling
+    associatedtype SubscribingObject: Unmarshaling, EndpointNaming
+}
+
+/// Protocol for objects which have an associated endpoint name
+public protocol EndpointNaming {
+    static var endpointName: String { get }
 }
 
 /**
