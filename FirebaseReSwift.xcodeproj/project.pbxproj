@@ -25,6 +25,7 @@
 		70CC547E1CF36F7A000E875B /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54761CF36F7A000E875B /* GoogleSymbolUtilities.framework */; };
 		70CC547F1CF36F7A000E875B /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54771CF36F7A000E875B /* GoogleUtilities.framework */; };
 		70CC54811CF3701D000E875B /* Firebase.h in Headers */ = {isa = PBXBuildFile; fileRef = 70CC54801CF3701D000E875B /* Firebase.h */; };
+		70CC54851CF3A1B6000E875B /* libicucore.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54841CF3A1B6000E875B /* libicucore.tbd */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -60,6 +61,7 @@
 		70CC54771CF36F7A000E875B /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = Vendor/Firebase/GoogleUtilities.framework; sourceTree = "<group>"; };
 		70CC54801CF3701D000E875B /* Firebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Firebase.h; path = Vendor/Firebase/Firebase.h; sourceTree = "<group>"; };
 		70CC54821CF37027000E875B /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; name = module.modulemap; path = Vendor/Firebase/module.modulemap; sourceTree = SOURCE_ROOT; };
+		70CC54841CF3A1B6000E875B /* libicucore.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libicucore.tbd; path = usr/lib/libicucore.tbd; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70CC54851CF3A1B6000E875B /* libicucore.tbd in Frameworks */,
 				70CC547E1CF36F7A000E875B /* GoogleSymbolUtilities.framework in Frameworks */,
 				70CC547D1CF36F7A000E875B /* GoogleNetworkingUtilities.framework in Frameworks */,
 				70CC547C1CF36F7A000E875B /* GoogleInterchangeUtilities.framework in Frameworks */,
@@ -137,6 +140,7 @@
 			isa = PBXGroup;
 			children = (
 				70CC54801CF3701D000E875B /* Firebase.h */,
+				70CC54841CF3A1B6000E875B /* libicucore.tbd */,
 				70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */,
 				70CC54711CF36F7A000E875B /* FirebaseAuth.framework */,
 				70CC54721CF36F7A000E875B /* FirebaseDatabase.framework */,
