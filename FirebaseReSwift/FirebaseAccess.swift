@@ -30,16 +30,16 @@ public protocol FirebaseAccess {
     /// The sharedAcccess that should be used when accessing Firebase
     static var sharedAccess: FirebaseAccess { get }
     /// The base ref for your Firebase app
-    var ref: Firebase { get }
+    var ref: FIRDatabaseReference { get }
     
     
     // MARK: - Overridable API functions
     
     func newObjectId() -> String?
-    func createObject<T>(ref: Firebase, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
-    func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
-    func removeObject<T>(ref: Firebase) -> (state: T, store: Store<T>) -> Action?
-    func getObject(objectRef: Firebase, completion: (objectJSON: JSONObject?) -> Void)
+    func createObject<T>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
+    func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
+    func removeObject<T>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
+    func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
     
     
     // MARK: - Overridable authentication functions
@@ -58,16 +58,15 @@ public extension FirebaseAccess {
     // MARK: - Public API
     
     /// Generates an automatic id for a new child object
-    public func newObjectId() -> String? {
-        guard let id = ref.childByAutoId().key else { return nil }
-        return id
+    public func newObjectId() -> String {
+        return ref.childByAutoId().key
     }
     
     /**
      Writes a Firebase object with the parameters, overwriting any values at the specific location.
      
      - Parameters:
-         - ref: The Firebase reference to the object to be written.
+         - ref: The Firebase database reference to the object to be written.
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
          - createNewChildId: A flag indicating whether a new child ID needs to be
          created before saving the new object.
@@ -77,7 +76,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(ref: Firebase, createNewChildId: Bool = false, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             finalRef.setValue(parameters)
@@ -89,7 +88,7 @@ public extension FirebaseAccess {
      Updates the Firebase object with the parameters, leaving all other values intact.
 
      - Parameters:
-         - ref: The Firebase reference to the object to be updated.
+         - ref: The Firebase database reference to the object to be updated.
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
          - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
          fields to be updated with their values.
@@ -97,7 +96,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
+    public func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.recursivelyUpdate(ref, parameters: parameters)
             return nil
@@ -130,12 +129,12 @@ public extension FirebaseAccess {
      Removes a Firebase object at the given ref.
      
      - Parameters:
-         - ref:     The Firebase reference to the object to be removed.
+         - ref:     The Firebase database reference to the object to be removed.
      
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
      type matches the `state` parameter.
      */
-    public func removeObject<T: StateType>(ref: Firebase) -> (state: T, store: Store<T>) -> Action? {
+    public func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             ref.removeValue()
             return nil
@@ -147,10 +146,10 @@ public extension FirebaseAccess {
      to the completion handler
      
      - Parameters:
-     - ref:          A Firebase reference to the data object
+     - ref:          A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func getObject(objectRef: Firebase, completion: (objectJSON: JSONObject?) -> Void) {
+    public func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void) {
         objectRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
             guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(objectJSON: nil); return }
             guard var json = snapshot.value as? JSONObject else { completion(objectJSON: nil); return }
