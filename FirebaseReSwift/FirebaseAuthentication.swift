@@ -22,6 +22,7 @@ public protocol FirebaseAuthenticationAction: Action { }
  - `ChangeEmailError`:      The email for the user could not be chagned
  - `ResetPasswordError`:    The password for the user could not be reset
  - `LogInMissingUserId`:    The auth payload contained no user id
+ - `SignUpFailedLogIn`:     The user was signed up, but could not be logged in
  - `CurrentUserNotFound`:   The data for the current user could not be found
  */
 public enum FirebaseAuthenticationError: ErrorType {
@@ -30,7 +31,9 @@ public enum FirebaseAuthenticationError: ErrorType {
     case ChangePasswordError(error: ErrorType)
     case ChangeEmailError(error: ErrorType)
     case ResetPasswordError(error: ErrorType)
+    case LogOutError(error: ErrorType)
     case LogInMissingUserId
+    case SignUpFailedLogIn
     case CurrentUserNotFound
 }
 
@@ -57,8 +60,8 @@ public extension FirebaseAccess {
      - returns: The user's authentication id, or nil if not authenticated
      */
     public func getUserId() -> String? {
-        guard let authData = self.ref.authData, userId = authData.uid else { return nil }
-        return userId
+        guard let user = FIRAuth.auth()?.currentUser else { return nil }
+        return user.uid
     }
     
     /**
@@ -75,11 +78,11 @@ public extension FirebaseAccess {
      */
     public func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            self.ref.authUser(email, password: password) { error, auth in
+            FIRAuth.auth()?.signInWithEmail(email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInError(error: error)))
-                } else if let userId = auth.uid {
-                    store.dispatch(UserLoggedIn(userId: userId))
+                } else if let user = user {
+                    store.dispatch(UserLoggedIn(userId: user.uid))
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInMissingUserId))
                 }
@@ -101,14 +104,16 @@ public extension FirebaseAccess {
      */
     public func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            self.ref.createUser(email, password: password, withValueCompletionBlock: { error, object in
+            FIRAuth.auth()?.createUserWithEmail(email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
-                } else {
+                } else if let user = user {
                     store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.UserSignedUp))
-                    store.dispatch(self.logInUser(email, password: password))
+                    store.dispatch(UserLoggedIn(userId: user.uid))
+                } else {
+                    store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpFailedLogIn))
                 }
-            })
+            }
             return nil
         }
     }
@@ -117,16 +122,18 @@ public extension FirebaseAccess {
      Change a user’s password.
      
      - Parameters:
-        - email:        The user’s email address
-        - oldPassword:  The previous password
         - newPassword:  The new password for the user
      
      - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func changeUserPassword<T: StateType>(email: String, oldPassword: String, newPassword: String) -> (state: T, store: Store<T>) -> Action? {
+    public func changeUserPassword<T: StateType>(newPassword: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            self.ref.changePasswordForUser(email, fromOld: oldPassword, toNew: newPassword) { error in
+            guard let user = FIRAuth.auth()?.currentUser else {
+                store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.CurrentUserNotFound))
+                return nil
+            }
+            user.updatePassword(newPassword) { error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ChangePasswordError(error: error)))
                 } else {
@@ -141,16 +148,18 @@ public extension FirebaseAccess {
      Change a user’s email address.
      
      - Parameters:
-        - email:        The user’s previous email address
-        - password:     The user’s password
-        - newEmail:     The new email address for the user
+        - email:        The new email address for the user
      
      - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func changeUserEmail<T: StateType>(email: String, password: String, newEmail: String) -> (state: T, store: Store<T>) -> Action? {
+    public func changeUserEmail<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            self.ref.changeEmailForUser(email, password: password, toNewEmail: newEmail) { error in
+            guard let user = FIRAuth.auth()?.currentUser else {
+                store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.CurrentUserNotFound))
+                return nil
+            }
+            user.updateEmail(email) { error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ChangeEmailError(error: error)))
                 } else {
@@ -172,7 +181,7 @@ public extension FirebaseAccess {
      */
     public func resetPassword<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            self.ref.resetPasswordForUser(email) { error in
+            FIRAuth.auth()?.sendPasswordResetWithEmail(email) { error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ResetPasswordError(error: error)))
                 } else {
@@ -190,8 +199,12 @@ public extension FirebaseAccess {
      type matches the state type associated with the store on which it is dispatched.
      */
     public func logOutUser<T: StateType>(state: T, store: Store<T>) -> Action? {
-        ref.unauth()
-        store.dispatch(UserLoggedOut())
+        do {
+            try FIRAuth.auth()?.signOut()
+            store.dispatch(UserLoggedOut())
+        } catch {
+            store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogOutError(error: error)))
+        }
         return nil
     }
 
