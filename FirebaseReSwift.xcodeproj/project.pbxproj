@@ -16,6 +16,14 @@
 		70B21BF21CCEE7E900E329A6 /* GenericActions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF11CCEE7E900E329A6 /* GenericActions.swift */; };
 		70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BF31CCFBB3400E329A6 /* Subscribing.swift */; };
 		70B21BFC1CD0136700E329A6 /* FirebaseAuthentication.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BFB1CD0136700E329A6 /* FirebaseAuthentication.swift */; };
+		70CC54781CF36F7A000E875B /* FirebaseAnalytics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */; };
+		70CC54791CF36F7A000E875B /* FirebaseAuth.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54711CF36F7A000E875B /* FirebaseAuth.framework */; };
+		70CC547A1CF36F7A000E875B /* FirebaseDatabase.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54721CF36F7A000E875B /* FirebaseDatabase.framework */; };
+		70CC547B1CF36F7A000E875B /* FirebaseInstanceID.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54731CF36F7A000E875B /* FirebaseInstanceID.framework */; };
+		70CC547C1CF36F7A000E875B /* GoogleInterchangeUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54741CF36F7A000E875B /* GoogleInterchangeUtilities.framework */; };
+		70CC547D1CF36F7A000E875B /* GoogleNetworkingUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54751CF36F7A000E875B /* GoogleNetworkingUtilities.framework */; };
+		70CC547E1CF36F7A000E875B /* GoogleSymbolUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54761CF36F7A000E875B /* GoogleSymbolUtilities.framework */; };
+		70CC547F1CF36F7A000E875B /* GoogleUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70CC54771CF36F7A000E875B /* GoogleUtilities.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -41,6 +49,14 @@
 		70B21BF11CCEE7E900E329A6 /* GenericActions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GenericActions.swift; sourceTree = "<group>"; };
 		70B21BF31CCFBB3400E329A6 /* Subscribing.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Subscribing.swift; sourceTree = "<group>"; };
 		70B21BFB1CD0136700E329A6 /* FirebaseAuthentication.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FirebaseAuthentication.swift; sourceTree = "<group>"; };
+		70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAnalytics.framework; path = Vendor/Firebase/FirebaseAnalytics.framework; sourceTree = "<group>"; };
+		70CC54711CF36F7A000E875B /* FirebaseAuth.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseAuth.framework; path = Vendor/Firebase/FirebaseAuth.framework; sourceTree = "<group>"; };
+		70CC54721CF36F7A000E875B /* FirebaseDatabase.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseDatabase.framework; path = Vendor/Firebase/FirebaseDatabase.framework; sourceTree = "<group>"; };
+		70CC54731CF36F7A000E875B /* FirebaseInstanceID.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseInstanceID.framework; path = Vendor/Firebase/FirebaseInstanceID.framework; sourceTree = "<group>"; };
+		70CC54741CF36F7A000E875B /* GoogleInterchangeUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleInterchangeUtilities.framework; path = Vendor/Firebase/GoogleInterchangeUtilities.framework; sourceTree = "<group>"; };
+		70CC54751CF36F7A000E875B /* GoogleNetworkingUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleNetworkingUtilities.framework; path = Vendor/Firebase/GoogleNetworkingUtilities.framework; sourceTree = "<group>"; };
+		70CC54761CF36F7A000E875B /* GoogleSymbolUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleSymbolUtilities.framework; path = Vendor/Firebase/GoogleSymbolUtilities.framework; sourceTree = "<group>"; };
+		70CC54771CF36F7A000E875B /* GoogleUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GoogleUtilities.framework; path = Vendor/Firebase/GoogleUtilities.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,8 +64,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70CC547E1CF36F7A000E875B /* GoogleSymbolUtilities.framework in Frameworks */,
+				70CC547D1CF36F7A000E875B /* GoogleNetworkingUtilities.framework in Frameworks */,
+				70CC547C1CF36F7A000E875B /* GoogleInterchangeUtilities.framework in Frameworks */,
 				70B21BE11CCEE43200E329A6 /* ReSwift.framework in Frameworks */,
+				70CC547B1CF36F7A000E875B /* FirebaseInstanceID.framework in Frameworks */,
+				70CC54791CF36F7A000E875B /* FirebaseAuth.framework in Frameworks */,
 				70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */,
+				70CC54781CF36F7A000E875B /* FirebaseAnalytics.framework in Frameworks */,
+				70CC547F1CF36F7A000E875B /* GoogleUtilities.framework in Frameworks */,
+				70CC547A1CF36F7A000E875B /* FirebaseDatabase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -108,6 +132,14 @@
 		70B21BE21CCEE43700E329A6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */,
+				70CC54711CF36F7A000E875B /* FirebaseAuth.framework */,
+				70CC54721CF36F7A000E875B /* FirebaseDatabase.framework */,
+				70CC54731CF36F7A000E875B /* FirebaseInstanceID.framework */,
+				70CC54741CF36F7A000E875B /* GoogleInterchangeUtilities.framework */,
+				70CC54751CF36F7A000E875B /* GoogleNetworkingUtilities.framework */,
+				70CC54761CF36F7A000E875B /* GoogleSymbolUtilities.framework */,
+				70CC54771CF36F7A000E875B /* GoogleUtilities.framework */,
 				70B21BE01CCEE43200E329A6 /* ReSwift.framework */,
 				70B21BDE1CCEE42A00E329A6 /* Marshal.framework */,
 			);
@@ -352,6 +384,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Vendor",
+					"$(PROJECT_DIR)/Vendor/Firebase",
 				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -376,6 +409,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Vendor",
+					"$(PROJECT_DIR)/Vendor/Firebase",
 				);
 				INFOPLIST_FILE = FirebaseReSwift/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
