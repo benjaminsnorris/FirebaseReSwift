@@ -36,9 +36,9 @@ public protocol FirebaseAccess {
     // MARK: - Overridable API functions
     
     func newObjectId() -> String?
-    func createObject<T>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
+    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
-    func removeObject<T>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
+    func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
     
     
