@@ -35,7 +35,7 @@ public protocol FirebaseAccess {
     
     // MARK: - Overridable API functions
     
-    func newObjectId() -> String?
+    func newObjectId() -> String
     func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
@@ -47,8 +47,8 @@ public protocol FirebaseAccess {
     func getUserId() -> String?
     func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
     func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
-    func changeUserPassword<T: StateType>(email: String, oldPassword: String, newPassword: String) -> (state: T, store: Store<T>) -> Action?
-    func changeUserEmail<T: StateType>(email: String, password: String, newEmail: String) -> (state: T, store: Store<T>) -> Action?
+    func changeUserPassword<T: StateType>(newPassword: String) -> (state: T, store: Store<T>) -> Action?
+    func changeUserEmail<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action?
     func resetPassword<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action?
     func logOutUser<T: StateType>(state: T, store: Store<T>) -> Action?
 }
