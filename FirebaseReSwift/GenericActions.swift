@@ -9,6 +9,20 @@ import Foundation
 import ReSwift
 import Marshal
 
+/// Simple protocol to help categorize actions
+public protocol FirebaseSeriousErrorAction: Action {
+    var error: ErrorType { get }
+}
+
+/// Simple protocol to help categorize actions
+public protocol FirebaseMinorErrorAction: Action {
+    var error: ErrorType { get }
+}
+
+/// Empty protocol to help categorize actions
+public protocol FirebaseDataAction: Action { }
+
+
 /**
  Generic action indicating that an object was added from Firebase and should be stored
  in the app state. The action is scoped to the object type that was added.
@@ -16,7 +30,7 @@ import Marshal
      - T:       The type of object that was added.
      - object:  The actual object that was added.
  */
-public struct ObjectAdded<T>: Action {
+public struct ObjectAdded<T>: Action, FirebaseDataAction {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -28,7 +42,7 @@ public struct ObjectAdded<T>: Action {
      - T:       The type of object that was changed.
      - object:  The actual object that was changed.
  */
-public struct ObjectChanged<T>: Action {
+public struct ObjectChanged<T>: Action, FirebaseDataAction {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -40,7 +54,7 @@ public struct ObjectChanged<T>: Action {
      - T:       The type of object that was removed.
      - object:  The actual object that was removed.
  */
-public struct ObjectRemoved<T>: Action {
+public struct ObjectRemoved<T>: Action, FirebaseDataAction {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -52,7 +66,7 @@ public struct ObjectRemoved<T>: Action {
      - T:       The type of object that produced the error
      - error:   An optional error indicating the problem that occurred
  */
-public struct ObjectErrored<T>: Action {
+public struct ObjectErrored<T>: Action, FirebaseMinorErrorAction {
     public var error: ErrorType
     public init(error: ErrorType) { self.error = error }
 }
@@ -64,7 +78,7 @@ public struct ObjectErrored<T>: Action {
      - T:           The type of state that can be subscribed or not
      - subscribed:  Flag indicating subscription status
  */
-public struct ObjectSubscribed<T>: Action {
+public struct ObjectSubscribed<T>: Action, FirebaseDataAction {
     public var subscribed: Bool
     public init(subscribed: Bool) { self.subscribed = subscribed }
 }

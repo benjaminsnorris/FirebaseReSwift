@@ -10,6 +10,9 @@ import Firebase
 import ReSwift
 import Marshal
 
+/// Empty protocol to help categorize actions
+public protocol FirebaseAuthenticationAction: Action { }
+
 /**
  An error that occurred authenticating with Firebase.
  
@@ -32,14 +35,14 @@ public enum FirebaseAuthenticationError: ErrorType {
 }
 
 /**
- An action type regarding user authentication
+ An event type regarding user authentication
  
  - `UserSignedUp`:      The user successfully signed up
  - `PasswordChanged`:   The password for the user was successfully changed
  - `EmailChanged`:      The email for the user was successfully changed
  - `PasswordReset`:     The user was sent a reset password email
  */
-public enum FirebaseAuthenticationAction {
+public enum FirebaseAuthenticationEvent {
     case UserSignedUp
     case PasswordChanged
     case EmailChanged
@@ -119,7 +122,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
                 } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.UserSignedUp))
+                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.UserSignedUp))
                     store.dispatch(self.logInUser(email, password: password))
                 }
             })
@@ -144,7 +147,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ChangePasswordError(error: error)))
                 } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.PasswordChanged))
+                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.PasswordChanged))
                 }
             }
             return nil
@@ -168,7 +171,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ChangeEmailError(error: error)))
                 } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.EmailChanged))
+                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.EmailChanged))
                 }
             }
             return nil
@@ -190,7 +193,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ResetPasswordError(error: error)))
                 } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationAction.PasswordReset))
+                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.PasswordReset))
                 }
             }
             return nil
@@ -218,7 +221,7 @@ public extension FirebaseAccess {
  Action indicating that the user has just successfully logged in with email and password.
  - Parameter userId: The id of the user
  */
-public struct UserLoggedIn: Action {
+public struct UserLoggedIn: Action, FirebaseAuthenticationAction {
     public var userId: String
     public init(userId: String) { self.userId = userId }
 }
@@ -227,16 +230,16 @@ public struct UserLoggedIn: Action {
  General action regarding user authentication
  - Parameter action: The authentication action that occurred
  */
-public struct UserAuthenticationAction: Action {
-    public var action: FirebaseAuthenticationAction
-    public init(action: FirebaseAuthenticationAction) { self.action = action }
+public struct UserAuthenticationAction: Action, FirebaseAuthenticationAction {
+    public var action: FirebaseAuthenticationEvent
+    public init(action: FirebaseAuthenticationEvent) { self.action = action }
 }
 
 /**
  Action indicating that a failure occurred during authentication.
  - Parameter error: The error that produced the failure
  */
-public struct UserAuthFailed: Action {
+public struct UserAuthFailed: Action, FirebaseSeriousErrorAction {
     public var error: ErrorType
     public init(error: ErrorType) { self.error = error }
 }
@@ -245,7 +248,7 @@ public struct UserAuthFailed: Action {
  Action indicating that the user is properly authenticated.
  - Parameter userId: The id of the authenticated user
  */
-public struct UserIdentified: Action {
+public struct UserIdentified: Action, FirebaseAuthenticationAction {
     public var userId: String
     public init(userId: String) { self.userId = userId }
 }
@@ -253,6 +256,6 @@ public struct UserIdentified: Action {
 /**
  Action indicating that the user has been unauthenticated.
  */
-public struct UserLoggedOut: Action {
+public struct UserLoggedOut: Action, FirebaseAuthenticationAction {
     public init() { }
 }
