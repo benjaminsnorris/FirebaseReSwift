@@ -39,12 +39,12 @@ public protocol FirebaseAccess {
     func createObject<T>(ref: Firebase, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
     func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T>(ref: Firebase) -> (state: T, store: Store<T>) -> Action?
+    func getObject(objectRef: Firebase, completion: (objectJSON: JSONObject?) -> Void)
     
     
     // MARK: - Overridable authentication functions
     
     func getUserId() -> String?
-    func getCurrentUser(currentUserRef: Firebase, completion: (userJSON: JSONObject?) -> Void)
     func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
     func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
     func changeUserPassword<T: StateType>(email: String, oldPassword: String, newPassword: String) -> (state: T, store: Store<T>) -> Action?
@@ -118,6 +118,23 @@ public extension FirebaseAccess {
             ref.removeValue()
             return nil
         }
+    }
+    
+    /**
+     Attempts to load data for a specific object. Passes the JSON data for the object
+     to the completion handler
+     
+     - Parameters:
+     - ref:          A Firebase reference to the data object
+     - completion:   A closure to run after retrieving the data and parsing it
+     */
+    public func getObject(objectRef: Firebase, completion: (objectJSON: MarshaledObject?) -> Void) {
+        objectRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(objectJSON: nil); return }
+            guard var json = snapshot.value as? JSONObject else { completion(objectJSON: nil); return }
+            json["id"] = snapshot.key
+            completion(objectJSON: json)
+        })
     }
     
 }

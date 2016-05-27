@@ -62,23 +62,6 @@ public extension FirebaseAccess {
     }
     
     /**
-     Attempts to load current user information. Passes the JSON data for the current user
-     to the completion handler
-     
-     - Parameters:
-        - ref:          A Firebase reference to the current user object
-        - completion:   A closure to run after retrieving the current user data and parsing it
-     */
-    public func getCurrentUser(currentUserRef: Firebase, completion: (userJSON: MarshaledObject?) -> Void) {
-        currentUserRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(userJSON: nil); return }
-            guard var json = snapshot.value as? JSONObject else { completion(userJSON: nil); return }
-            json["id"] = snapshot.key
-            completion(userJSON: json)
-        })
-    }
-    
-    /**
      Authenticates the user with email address and password. If successful, dispatches an action
      with the user’s id (`UserLoggedIn`), otherwise dispatches a failed action with an error
      (`UserAuthFailed`).
