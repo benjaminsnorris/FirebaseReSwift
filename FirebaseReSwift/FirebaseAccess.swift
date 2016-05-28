@@ -128,7 +128,7 @@ public extension FirebaseAccess {
      - ref:          A Firebase reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func getObject(objectRef: Firebase, completion: (objectJSON: MarshaledObject?) -> Void) {
+    public func getObject(objectRef: Firebase, completion: (objectJSON: JSONObject?) -> Void) {
         objectRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
             guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(objectJSON: nil); return }
             guard var json = snapshot.value as? JSONObject else { completion(objectJSON: nil); return }
