@@ -88,6 +88,9 @@ public extension FirebaseAccess {
     /**
      Updates the Firebase object with the parameters, leaving all other values intact.
      
+     Note: If the parameters include child node(s) as sibling(s) to leaf node(s), there
+     is a chance that properties could be removed when updating.
+
      - Parameters:
          - ref: The Firebase reference to the object to be updated.
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
@@ -99,8 +102,26 @@ public extension FirebaseAccess {
      */
     public func updateObject<T: StateType>(ref: Firebase, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            ref.updateChildValues(parameters)
+            self.recursivelyUpdate(ref, parameters: parameters)
             return nil
+        }
+    }
+    
+    /**
+     Recurses through parameters until only the leaf node(s) are included,
+     modifying the ref through each recursion. This ensures that no other properties
+     are removed from the ref when the update occurs.
+     
+     - Parameters:
+        - ref: The Firebase reference to the object to be updated.
+        - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
+        fields to be updated with their values.
+    */
+    func recursivelyUpdate(ref: Firebase, parameters: MarshaledObject) {
+        if let key = parameters.first?.0, value = parameters.first?.1 as? MarshaledObject where parameters.count == 1 {
+            recursivelyUpdate(ref.childByAppendingPath(key), parameters: value)
+        } else {
+            ref.updateChildValues(parameters)
         }
     }
     
