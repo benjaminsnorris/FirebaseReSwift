@@ -87,9 +87,6 @@ public extension FirebaseAccess {
     
     /**
      Updates the Firebase object with the parameters, leaving all other values intact.
-     
-     Note: If the parameters include child node(s) as sibling(s) to leaf node(s), there
-     is a chance that properties could be removed when updating.
 
      - Parameters:
          - ref: The Firebase reference to the object to be updated.
@@ -118,11 +115,15 @@ public extension FirebaseAccess {
         fields to be updated with their values.
     */
     func recursivelyUpdate(ref: Firebase, parameters: MarshaledObject) {
-        if let key = parameters.first?.0, value = parameters.first?.1 as? MarshaledObject where parameters.count == 1 {
-            recursivelyUpdate(ref.childByAppendingPath(key), parameters: value)
-        } else {
-            ref.updateChildValues(parameters)
+        var result = MarshaledObject()
+        for (key, value) in parameters {
+            if let object = value as? MarshaledObject {
+                recursivelyUpdate(ref.childByAppendingPath(key), parameters: object)
+            } else {
+                result[key] = value
+            }
         }
+        ref.updateChildValues(result)
     }
     
     /**
