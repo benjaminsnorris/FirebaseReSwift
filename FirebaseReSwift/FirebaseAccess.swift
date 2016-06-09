@@ -36,8 +36,8 @@ public protocol FirebaseAccess {
     // MARK: - Overridable API functions
     
     func newObjectId() -> String
-    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
-    func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action?
+    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
+    func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
     
@@ -70,13 +70,13 @@ public extension FirebaseAccess {
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
          - createNewChildId: A flag indicating whether a new child ID needs to be
          created before saving the new object.
-         - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
+         - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
          object with all of its properties.
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             finalRef.setValue(parameters)
@@ -90,13 +90,13 @@ public extension FirebaseAccess {
      - Parameters:
          - ref: The Firebase database reference to the object to be updated.
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
-         - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
+         - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
          fields to be updated with their values.
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: MarshaledObject) -> (state: T, store: Store<T>) -> Action? {
+    public func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             self.recursivelyUpdate(ref, parameters: parameters)
             return nil
@@ -110,13 +110,13 @@ public extension FirebaseAccess {
      
      - Parameters:
         - ref: The Firebase reference to the object to be updated.
-        - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
+        - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
         fields to be updated with their values.
     */
-    func recursivelyUpdate(ref: FIRDatabaseReference, parameters: MarshaledObject) {
-        var result = MarshaledObject()
+    func recursivelyUpdate(ref: FIRDatabaseReference, parameters: JSONObject) {
+        var result = JSONObject()
         for (key, value) in parameters {
-            if let object = value as? MarshaledObject {
+            if let object = value as? JSONObject {
                 recursivelyUpdate(ref.child(key), parameters: object)
             } else {
                 result[key] = value
