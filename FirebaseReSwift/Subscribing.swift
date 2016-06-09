@@ -60,14 +60,14 @@ public extension SubscribingState {
      - `ChildRemoved` event:    `ObjectRemoved` action
      
      - Parameters:
-         - query: The Firebase query to which to subscribe. This is usually
+         - query: The Firebase database query to which to subscribe. This is usually
          constructed from the base `ref` using `childByAppendingPath(_)` or other 
          `FQuery` functions.
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func subscribeToObjects<T: StateType>(query: FQuery) -> (state: T, store: Store<T>) -> Action? {
+    public func subscribeToObjects<T: StateType>(query: FIRDatabaseQuery) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             if !self.subscribed {
                 store.dispatch(ObjectSubscribed<SubscribingType>(subscribed: true))
