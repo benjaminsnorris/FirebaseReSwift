@@ -113,11 +113,11 @@ public extension FirebaseAccess {
         - parameters: A `MarshaledObject` (`[String: AnyObject]`) representing the
         fields to be updated with their values.
     */
-    func recursivelyUpdate(ref: Firebase, parameters: MarshaledObject) {
+    func recursivelyUpdate(ref: FIRDatabaseReference, parameters: MarshaledObject) {
         var result = MarshaledObject()
         for (key, value) in parameters {
             if let object = value as? MarshaledObject {
-                recursivelyUpdate(ref.childByAppendingPath(key), parameters: object)
+                recursivelyUpdate(ref.child(key), parameters: object)
             } else {
                 result[key] = value
             }
