@@ -40,7 +40,7 @@ public protocol FirebaseAccess {
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
-    
+    func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
     
     // MARK: - Overridable authentication functions
     
@@ -143,7 +143,7 @@ public extension FirebaseAccess {
     
     /**
      Attempts to load data for a specific object. Passes the JSON data for the object
-     to the completion handler
+     to the completion handler.
      
      - Parameters:
      - ref:          A Firebase database reference to the data object
@@ -155,6 +155,25 @@ public extension FirebaseAccess {
             guard var json = snapshot.value as? JSONObject else { completion(objectJSON: nil); return }
             json["id"] = snapshot.key
             completion(objectJSON: json)
+        })
+    }
+    
+    /**
+     Searches for one or more objects at the location specified in the `baseQuery`. Passes
+     the JSON data for the objects found to the completion handler.
+     
+     - Parameters:
+     - baseQuery:   A Firebase database query for the data object table
+     - key:         The name of the field to be searched
+     - value:       The search term to query
+     - completion:  A closure to run after retrieving the data and parsing as JSON
+     */
+    public func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void) {
+        let query = baseQuery.queryOrderedByChild(key).queryEqualToValue(value)
+        query.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(json: nil); return }
+            guard let json = snapshot.value as? JSONObject else { completion(json: nil); return }
+            completion(json: json)
         })
     }
     
