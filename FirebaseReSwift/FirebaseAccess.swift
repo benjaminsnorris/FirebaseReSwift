@@ -35,7 +35,7 @@ public protocol FirebaseAccess {
     // MARK: - Overridable API functions
     
     func newObjectId() -> String
-    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
+    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
@@ -69,15 +69,21 @@ public extension FirebaseAccess {
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
          - createNewChildId: A flag indicating whether a new child ID needs to be
          created before saving the new object.
+         - removeId: A flag indicating whether the key-value pair for `id` should
+         be removed before saving the new object.
          - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
          object with all of its properties.
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, removeId: Bool = true, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
+            var parameters = parameters
+            if removeId {
+                parameters.removeValueForKey("id")
+            }
             finalRef.setValue(parameters)
             return nil
         }
