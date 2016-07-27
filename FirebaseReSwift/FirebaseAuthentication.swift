@@ -55,7 +55,7 @@ public enum FirebaseAuthenticationEvent {
 public extension FirebaseAccess {
 
     /**
-     Attempts to retrieve the user's authentication id. If successful, it is returned
+     Attempts to retrieve the user's authentication id. If successful, it is returned.
      
      - returns: The user's authentication id, or nil if not authenticated
      */
@@ -92,8 +92,7 @@ public extension FirebaseAccess {
     }
     
     /**
-     Creates a user with the email address and password. On success, an action is dispatched
-     to log the user in.
+     Creates a user with the email address and password.
      
      - Parameters:
         - email:    The user’s email address

@@ -17,18 +17,17 @@ import ReSwift
  
  ```swift
  struct FirebaseNetworkAccess: FirebaseAccess {
-    static let sharedAccess: FirebaseAccess = FirebaseNetworkAccess()
+    static let sharedAccess = FirebaseNetworkAccess()
     let ref: Firebase
     init() {
+        FIRApp.configure()
         Firebase.defaultConfig().persistenceEnabled = true // Only for offline access
-        self.ref = Firebase(url: "https://your-app.firebaseio.com")
+        ref = FIRDatabase.database().reference()
     }
  }
  ```
  */
 public protocol FirebaseAccess {
-    /// The sharedAcccess that should be used when accessing Firebase
-    static var sharedAccess: FirebaseAccess { get }
     /// The base ref for your Firebase app
     var ref: FIRDatabaseReference { get }
     
@@ -36,11 +35,11 @@ public protocol FirebaseAccess {
     // MARK: - Overridable API functions
     
     func newObjectId() -> String
-    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
+    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
-    
+    func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
     
     // MARK: - Overridable authentication functions
     
@@ -70,15 +69,21 @@ public extension FirebaseAccess {
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
          - createNewChildId: A flag indicating whether a new child ID needs to be
          created before saving the new object.
+         - removeId: A flag indicating whether the key-value pair for `id` should
+         be removed before saving the new object.
          - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
          object with all of its properties.
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, removeId: Bool = true, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
+            var parameters = parameters
+            if removeId {
+                parameters.removeValueForKey("id")
+            }
             finalRef.setValue(parameters)
             return nil
         }
@@ -143,7 +148,7 @@ public extension FirebaseAccess {
     
     /**
      Attempts to load data for a specific object. Passes the JSON data for the object
-     to the completion handler
+     to the completion handler.
      
      - Parameters:
      - ref:          A Firebase database reference to the data object
@@ -155,6 +160,25 @@ public extension FirebaseAccess {
             guard var json = snapshot.value as? JSONObject else { completion(objectJSON: nil); return }
             json["id"] = snapshot.key
             completion(objectJSON: json)
+        })
+    }
+    
+    /**
+     Searches for one or more objects at the location specified in the `baseQuery`. Passes
+     the JSON data for the objects found to the completion handler.
+     
+     - Parameters:
+     - baseQuery:   A Firebase database query for the data object table
+     - key:         The name of the field to be searched
+     - value:       The search term to query
+     - completion:  A closure to run after retrieving the data and parsing as JSON
+     */
+    public func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void) {
+        let query = baseQuery.queryOrderedByChild(key).queryEqualToValue(value)
+        query.observeSingleEventOfType(.Value, withBlock: { snapshot in
+            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(json: nil); return }
+            guard let json = snapshot.value as? JSONObject else { completion(json: nil); return }
+            completion(json: json)
         })
     }
     
