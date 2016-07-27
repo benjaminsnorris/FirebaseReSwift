@@ -20,8 +20,9 @@ import ReSwift
     static let sharedAccess = FirebaseNetworkAccess()
     let ref: Firebase
     init() {
+        FIRApp.configure()
         Firebase.defaultConfig().persistenceEnabled = true // Only for offline access
-        self.ref = Firebase(url: "https://your-app.firebaseio.com")
+        ref = FIRDatabase.database().reference()
     }
  }
  ```
