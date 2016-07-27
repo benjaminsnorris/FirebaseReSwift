@@ -17,7 +17,7 @@ import ReSwift
  
  ```swift
  struct FirebaseNetworkAccess: FirebaseAccess {
-    static let sharedAccess: FirebaseAccess = FirebaseNetworkAccess()
+    static let sharedAccess = FirebaseNetworkAccess()
     let ref: Firebase
     init() {
         Firebase.defaultConfig().persistenceEnabled = true // Only for offline access
@@ -27,8 +27,6 @@ import ReSwift
  ```
  */
 public protocol FirebaseAccess {
-    /// The sharedAcccess that should be used when accessing Firebase
-    static var sharedAccess: FirebaseAccess { get }
     /// The base ref for your Firebase app
     var ref: FIRDatabaseReference { get }
     
