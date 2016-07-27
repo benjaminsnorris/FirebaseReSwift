@@ -77,7 +77,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool = false, removeId: Bool = true, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             var parameters = parameters
