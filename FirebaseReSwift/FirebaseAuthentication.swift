@@ -53,6 +53,13 @@ public enum FirebaseAuthenticationEvent {
 }
 
 public extension FirebaseAccess {
+    
+    /**
+     Defaults `currentApp` to default Firebase app.
+     */
+    public var currentApp: FIRApp? {
+        return FIRApp.defaultApp()
+    }
 
     /**
      Attempts to retrieve the user's authentication id. If successful, it is returned.
@@ -60,7 +67,8 @@ public extension FirebaseAccess {
      - returns: The user's authentication id, or nil if not authenticated
      */
     public func getUserId() -> String? {
-        guard let user = FIRAuth.auth()?.currentUser else { return nil }
+        guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+        guard let user = auth.currentUser else { return nil }
         return user.uid
     }
     
@@ -78,7 +86,8 @@ public extension FirebaseAccess {
      */
     public func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            FIRAuth.auth()?.signInWithEmail(email, password: password) { user, error in
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            auth.signInWithEmail(email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInError(error: error)))
                 } else if let user = user {
@@ -103,7 +112,8 @@ public extension FirebaseAccess {
      */
     public func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            FIRAuth.auth()?.createUserWithEmail(email, password: password) { user, error in
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            auth.createUserWithEmail(email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
                 } else if let user = user {
@@ -128,7 +138,8 @@ public extension FirebaseAccess {
      */
     public func changeUserPassword<T: StateType>(newPassword: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            guard let user = FIRAuth.auth()?.currentUser else {
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            guard let user = auth.currentUser else {
                 store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.CurrentUserNotFound))
                 return nil
             }
@@ -154,7 +165,8 @@ public extension FirebaseAccess {
      */
     public func changeUserEmail<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            guard let user = FIRAuth.auth()?.currentUser else {
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            guard let user = auth.currentUser else {
                 store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.CurrentUserNotFound))
                 return nil
             }
@@ -180,7 +192,8 @@ public extension FirebaseAccess {
      */
     public func resetPassword<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
-            FIRAuth.auth()?.sendPasswordResetWithEmail(email) { error in
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            auth.sendPasswordResetWithEmail(email) { error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.ResetPasswordError(error: error)))
                 } else {
@@ -199,7 +212,8 @@ public extension FirebaseAccess {
      */
     public func logOutUser<T: StateType>(state: T, store: Store<T>) -> Action? {
         do {
-            try FIRAuth.auth()?.signOut()
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            try auth.signOut()
             store.dispatch(UserLoggedOut())
         } catch {
             store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogOutError(error: error)))

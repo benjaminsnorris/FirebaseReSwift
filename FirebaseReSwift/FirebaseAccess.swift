@@ -30,6 +30,7 @@ import ReSwift
 public protocol FirebaseAccess {
     /// The base ref for your Firebase app
     var ref: FIRDatabaseReference { get }
+    var currentApp: FIRApp? { get }
     
     
     // MARK: - Overridable API functions
