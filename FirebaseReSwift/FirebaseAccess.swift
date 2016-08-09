@@ -46,7 +46,7 @@ public protocol FirebaseAccess {
     
     func getUserId() -> String?
     func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
-    func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
+    func signUpUser<T: StateType>(email: String, password: String, completion: ((userId: String?) -> Void)?) -> (state: T, store: Store<T>) -> Action?
     func changeUserPassword<T: StateType>(newPassword: String) -> (state: T, store: Store<T>) -> Action?
     func changeUserEmail<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action?
     func resetPassword<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action?

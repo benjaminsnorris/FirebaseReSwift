@@ -106,21 +106,28 @@ public extension FirebaseAccess {
      - Parameters:
         - email:    The user’s email address
         - password: The user’s password
+        - completion: Optional closure that takes in the new user's `uid` if possible
      
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func signUpUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
+    public func signUpUser<T: StateType>(email: String, password: String, completion: ((userId: String?) -> Void)?) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
             auth.createUserWithEmail(email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpError(error: error)))
+                    completion?(userId: nil)
                 } else if let user = user {
                     store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.UserSignedUp))
-                    store.dispatch(UserLoggedIn(userId: user.uid))
+                    if let completion = completion {
+                        completion(userId: user.uid)
+                    } else {
+                        store.dispatch(UserLoggedIn(userId: user.uid))
+                    }
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpFailedLogIn))
+                    completion?(userId: nil)
                 }
             }
             return nil
