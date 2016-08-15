@@ -73,6 +73,17 @@ public extension FirebaseAccess {
     }
     
     /**
+     Attempts to retrieve user's email verified status.
+     
+     - returns: `True` if email has been verified, otherwise `false`.
+     */
+    public func getUserEmailVerified() -> Bool {
+        guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return false }
+        guard let user = auth.currentUser else { return false }
+        return user.emailVerified
+    }
+    
+    /**
      Authenticates the user with email address and password. If successful, dispatches an action
      with the user’s id (`UserLoggedIn`), otherwise dispatches a failed action with an error
      (`UserAuthFailed`).
@@ -91,7 +102,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInError(error: error)))
                 } else if let user = user {
-                    store.dispatch(UserLoggedIn(userId: user.uid))
+                    store.dispatch(UserLoggedIn(userId: user.uid, emailVerified: user.emailVerified))
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInMissingUserId))
                 }
@@ -239,7 +250,11 @@ public extension FirebaseAccess {
  */
 public struct UserLoggedIn: Action, FirebaseAuthenticationAction {
     public var userId: String
-    public init(userId: String) { self.userId = userId }
+    public var emailVerified: Bool
+    public init(userId: String, emailVerified: Bool = false) {
+        self.userId = userId
+        self.emailVerified = emailVerified
+    }
 }
 
 /**
@@ -266,7 +281,11 @@ public struct UserAuthFailed: Action, FirebaseSeriousErrorAction {
  */
 public struct UserIdentified: Action, FirebaseAuthenticationAction {
     public var userId: String
-    public init(userId: String) { self.userId = userId }
+    public var emailVerified: Bool
+    public init(userId: String, emailVerified: Bool = false) {
+        self.userId = userId
+        self.emailVerified = emailVerified
+    }
 }
 
 /**
