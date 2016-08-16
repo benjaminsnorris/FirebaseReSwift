@@ -60,6 +60,32 @@ public extension FirebaseAccess {
     public var currentApp: FIRApp? {
         return FIRApp.defaultApp()
     }
+    
+    /**
+     Adds a listener to the auth state of the current Firebase app.
+     
+     Note: Mainly used for detecting when a user’s `emailVerified` status changes.
+     */
+    public func subscribeToAuthState<T: StateType>(state: T, store: Store<T>) -> Action? {
+        guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+        let handle = auth.addAuthStateDidChangeListener { auth, user in
+            if let user = user {
+                store.dispatch(UserIdentified(userId: user.uid, emailVerified: user.emailVerified))
+            }
+        }
+        return AuthStateSubscribed(handle: handle)
+    }
+    
+    /**
+     Removes listener from auth state. Typically invoked when switching Firebase apps.
+     */
+    public func removeAuthStateSubscription<T: StateType>(handle: FIRAuthStateDidChangeListenerHandle) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+            auth.removeAuthStateDidChangeListener(handle)
+            return AuthStateListenerRemoved()
+        }
+    }
 
     /**
      Attempts to retrieve the user's authentication id. If successful, it is returned.
@@ -84,7 +110,7 @@ public extension FirebaseAccess {
     }
     
     /**
- 
+     
      */
     public func sendEmailVerification<T: StateType>(state: T, store: Store<T>) -> Action? {
         guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return nil }
@@ -319,10 +345,26 @@ public struct EmailVerificationSent: FirebaseAuthenticationAction {
 }
 
 /**
- Action indication an error when sending email verification.
+ Action indicating an error when sending email verification.
  - Parameter error: The error that occurred
  */
 public struct EmailVerificationError: FirebaseMinorErrorAction {
     public var error: ErrorType
     public init(error: ErrorType) { self.error = error }
+}
+
+/**
+ Action indicating a listener has been added to the auth state.
+ - Parameter handle: The `FIRAuthStateDidChangeListenerHandle` to be used in removing the listener
+ */
+public struct AuthStateSubscribed: FirebaseAuthenticationAction {
+    public var handle: FIRAuthStateDidChangeListenerHandle
+    public init(handle: FIRAuthStateDidChangeListenerHandle) { self.handle = handle }
+}
+
+/**
+ Action indicating the auth state listener was removed.
+ */
+public struct AuthStateListenerRemoved: FirebaseAuthenticationAction {
+    public init() { }
 }
