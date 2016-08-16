@@ -84,6 +84,22 @@ public extension FirebaseAccess {
     }
     
     /**
+ 
+     */
+    public func sendEmailVerification<T: StateType>(state: T, store: Store<T>) -> Action? {
+        guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+        guard let user = auth.currentUser else { return nil }
+        user.sendEmailVerificationWithCompletion { error in
+            if let error = error {
+                store.dispatch(EmailVerificationError(error: error))
+            } else {
+                store.dispatch(EmailVerificationSent())
+            }
+        }
+        return nil
+    }
+    
+    /**
      Authenticates the user with email address and password. If successful, dispatches an action
      with the user’s id (`UserLoggedIn`), otherwise dispatches a failed action with an error
      (`UserAuthFailed`).
@@ -293,4 +309,20 @@ public struct UserIdentified: Action, FirebaseAuthenticationAction {
  */
 public struct UserLoggedOut: Action, FirebaseAuthenticationAction {
     public init() { }
+}
+
+/**
+ Action indicating that the user has been sent an email verification.
+ */
+public struct EmailVerificationSent: FirebaseAuthenticationAction {
+    public init() { }
+}
+
+/**
+ Action indication an error when sending email verification.
+ - Parameter error: The error that occurred
+ */
+public struct EmailVerificationError: FirebaseMinorErrorAction {
+    public var error: ErrorType
+    public init(error: ErrorType) { self.error = error }
 }

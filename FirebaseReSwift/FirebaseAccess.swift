@@ -42,10 +42,12 @@ public protocol FirebaseAccess {
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
     func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
     
+    
     // MARK: - Overridable authentication functions
     
     func getUserId() -> String?
     func getUserEmailVerified() -> Bool
+    func sendEmailVerification<T: StateType>(state: T, store: Store<T>) -> Action?
     func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
     func signUpUser<T: StateType>(email: String, password: String, completion: ((userId: String?) -> Void)?) -> (state: T, store: Store<T>) -> Action?
     func changeUserPassword<T: StateType>(newPassword: String) -> (state: T, store: Store<T>) -> Action?
