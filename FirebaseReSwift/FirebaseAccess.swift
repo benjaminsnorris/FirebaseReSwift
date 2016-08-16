@@ -45,8 +45,6 @@ public protocol FirebaseAccess {
     
     // MARK: - Overridable authentication functions
     
-    func subscribeToAuthState<T: StateType>(state: T, store: Store<T>) -> Action?
-    func removeAuthStateSubscription<T: StateType>(handle: FIRAuthStateDidChangeListenerHandle) -> (state: T, store: Store<T>) -> Action?
     func getUserId() -> String?
     func getUserEmailVerified() -> Bool
     func sendEmailVerification<T: StateType>(state: T, store: Store<T>) -> Action?
