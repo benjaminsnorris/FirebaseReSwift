@@ -70,8 +70,6 @@ public extension SubscribingState {
     public func subscribeToObjects<T: StateType>(query: FIRDatabaseQuery) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             if !self.subscribed {
-                store.dispatch(ObjectSubscribed<SubscribingType>(subscribed: true))
-                
                 let idKey = "id"
                 
                 // Additions
@@ -131,9 +129,26 @@ public extension SubscribingState {
                     }
                 })
                 
-                return nil
+                return ObjectSubscribed<SubscribingType>(subscribed: true)
             }
             
+            return nil
+        }
+    }
+    
+    /**
+     Removes all observers on a `FIRDatabaseQuery`.
+     
+     - Note: This is often used when signing out, or switching Firebase apps.
+     
+     - Parameter query: The query that was originally used to subscribe to events.
+     */
+    public func removeSubscriptions<T: StateType>(query: FIRDatabaseQuery) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            if self.subscribed {
+                query.removeAllObservers()
+                return ObjectSubscribed<SubscribingType>(subscribed: false)
+            }
             return nil
         }
     }
