@@ -75,7 +75,37 @@ public extension FirebaseAccess {
     }
     
     /**
- 
+     Checks whether `emailVerified` is true for the user with the provided credentials.
+     
+     - Note: In order to check status, a new, random Firebase app is created for the user to log in and check credentials, so the main app and authentication are not affected.
+     
+     - Parameters:
+         - email:    The user’s email address
+         - password: The user’s password
+     
+     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the state type associated with the store on which it is dispatched.
+     */
+    public func checkEmailVerifiedInBackground<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            let randomApp = FIRApp.random(with: self.ref)
+            guard let auth = FIRAuth(app: randomApp) else { return nil }
+            auth.signInWithEmail(email, password: password) { user, error in
+                if let error = error {
+                    store.dispatch(UserAuthFailed(error: error))
+                } else if let user = user {
+                    store.dispatch(UserIdentified(userId: user.uid, emailVerified: user.emailVerified))
+                } else {
+                    store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInMissingUserId))
+                }
+                randomApp.deleteApp { _ in }
+            }
+            return nil
+        }
+    }
+    
+    /**
+     Sends verification email to current user.
      */
     public func sendEmailVerification<T: StateType>(state: T, store: Store<T>) -> Action? {
         guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return nil }
@@ -109,7 +139,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: error))
                 } else if let user = user {
-                    store.dispatch(UserLoggedIn(userId: user.uid, emailVerified: user.emailVerified))
+                    store.dispatch(UserLoggedIn(userId: user.uid, emailVerified: user.emailVerified, email: email, password: password))
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInMissingUserId))
                 }
@@ -141,7 +171,7 @@ public extension FirebaseAccess {
                     if let completion = completion {
                         completion(userId: user.uid)
                     } else {
-                        store.dispatch(UserLoggedIn(userId: user.uid))
+                        store.dispatch(UserLoggedIn(userId: user.uid, email: email, password: password))
                     }
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpFailedLogIn))
@@ -253,14 +283,27 @@ public extension FirebaseAccess {
 
 /**
  Action indicating that the user has just successfully logged in with email and password.
- - Parameter userId: The id of the user
+ - Parameters
+    - userId: The id of the user
+    - emailVerified: Status of user’s email verification
+    - email: Email address of user
+    - password: Password of user
  */
-public struct UserLoggedIn: FirebaseAuthenticationAction {
+public struct UserLoggedIn: FirebaseAuthenticationAction, CustomStringConvertible {
     public var userId: String
     public var emailVerified: Bool
-    public init(userId: String, emailVerified: Bool = false) {
+    public var email: String
+    public var password: String
+    
+    public init(userId: String, emailVerified: Bool = false, email: String, password: String) {
         self.userId = userId
         self.emailVerified = emailVerified
+        self.email = email
+        self.password = password
+    }
+    
+    public var description: String {
+        return "UserLoggedIn(userId: \(userId), email: \(email), emailVerified: \(emailVerified))"
     }
 }
 
