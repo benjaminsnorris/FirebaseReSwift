@@ -165,7 +165,7 @@ public extension FirebaseAccess {
                     store.dispatch(UserAuthFailed(error: error))
                     completion?(userId: nil)
                 } else if let user = user {
-                    store.dispatch(UserSignedUp(email: email, password: password))
+                    store.dispatch(UserSignedUp(userId: user.uid, email: email, password: password))
                     if let completion = completion {
                         completion(userId: user.uid)
                     } else {
@@ -308,20 +308,23 @@ public struct UserLoggedIn: FirebaseAuthenticationAction, CustomStringConvertibl
 /**
  Action indicating that the user has just successfully signed up.
  - Parameters
-     - email: Email address of user
-     - password: Password of user
+    - userId: The id of the user
+    - email: Email address of user
+    - password: Password of user
  */
 public struct UserSignedUp: FirebaseAuthenticationAction, CustomStringConvertible {
+    public var userId: String
     public var email: String
     public var password: String
     
-    public init(email: String, password: String) {
+    public init(userId: String, email: String, password: String) {
+        self.userId = userId
         self.email = email
         self.password = password
     }
     
     public var description: String {
-        return "UserLoggedIn(email: \(email))"
+        return "UserSignedUp(userId: \(userId), email: \(email))"
     }
 }
 
