@@ -29,14 +29,12 @@ public enum FirebaseAuthenticationError: ErrorType {
 /**
  An event type regarding user authentication
  
- - `UserSignedUp`:      The user successfully signed up
  - `PasswordChanged`:   The password for the user was successfully changed
  - `EmailChanged`:      The email for the user was successfully changed
  - `PasswordReset`:     The user was sent a reset password email
  - `EmailVerificationSent`: The user was an email confirmation email
  */
 public enum FirebaseAuthenticationEvent {
-    case UserSignedUp
     case PasswordChanged
     case EmailChanged
     case PasswordReset
@@ -167,7 +165,7 @@ public extension FirebaseAccess {
                     store.dispatch(UserAuthFailed(error: error))
                     completion?(userId: nil)
                 } else if let user = user {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.UserSignedUp))
+                    store.dispatch(UserSignedUp(email: email, password: password))
                     if let completion = completion {
                         completion(userId: user.uid)
                     } else {
@@ -304,6 +302,26 @@ public struct UserLoggedIn: FirebaseAuthenticationAction, CustomStringConvertibl
     
     public var description: String {
         return "UserLoggedIn(userId: \(userId), email: \(email), emailVerified: \(emailVerified))"
+    }
+}
+
+/**
+ Action indicating that the user has just successfully signed up.
+ - Parameters
+     - email: Email address of user
+     - password: Password of user
+ */
+public struct UserSignedUp: FirebaseAuthenticationAction, CustomStringConvertible {
+    public var email: String
+    public var password: String
+    
+    public init(email: String, password: String) {
+        self.email = email
+        self.password = password
+    }
+    
+    public var description: String {
+        return "UserLoggedIn(email: \(email))"
     }
 }
 
