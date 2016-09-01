@@ -73,33 +73,19 @@ public extension FirebaseAccess {
     }
     
     /**
-     Checks whether `emailVerified` is true for the user with the provided credentials.
-     
-     - Note: In order to check status, a new, random Firebase app is created for the user to log in and check credentials, so the main app and authentication are not affected.
-     
-     - Parameters:
-         - email:    The user’s email address
-         - password: The user’s password
-     
-     - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
-     type matches the state type associated with the store on which it is dispatched.
+     Reloads the current user object. This is useful for checking whether `emailVerified` is now true.
      */
-    public func checkEmailVerifiedInBackground<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action? {
-        return { state, store in
-            let randomApp = FIRApp.random(with: self.ref)
-            guard let auth = FIRAuth(app: randomApp) else { return nil }
-            auth.signInWithEmail(email, password: password) { user, error in
-                if let error = error {
-                    store.dispatch(UserAuthFailed(error: error))
-                } else if let user = user {
-                    store.dispatch(UserIdentified(userId: user.uid, emailVerified: user.emailVerified))
-                } else {
-                    store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInMissingUserId))
-                }
-                randomApp.deleteApp { _ in }
+    public func reloadCurrentUser<T: StateType>(state: T, store: Store<T>) -> Action? {
+        guard let currentApp = currentApp, auth = FIRAuth(app: currentApp) else { return nil }
+        guard let user = auth.currentUser else { return nil }
+        user.reloadWithCompletion { error in
+            if let error = error {
+                store.dispatch(UserAuthFailed(error: error))
+            } else {
+                store.dispatch(UserIdentified(userId: user.uid, emailVerified: user.emailVerified))
             }
-            return nil
         }
+        return nil
     }
     
     /**
