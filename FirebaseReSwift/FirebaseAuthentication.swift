@@ -123,7 +123,7 @@ public extension FirebaseAccess {
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: error))
                 } else if let user = user {
-                    store.dispatch(UserLoggedIn(userId: user.uid, emailVerified: user.emailVerified, email: email, password: password))
+                    store.dispatch(UserLoggedIn(userId: user.uid, emailVerified: user.emailVerified, email: email))
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.LogInMissingUserId))
                 }
@@ -151,11 +151,11 @@ public extension FirebaseAccess {
                     store.dispatch(UserAuthFailed(error: error))
                     completion?(userId: nil)
                 } else if let user = user {
-                    store.dispatch(UserSignedUp(userId: user.uid, email: email, password: password))
+                    store.dispatch(UserSignedUp(userId: user.uid, email: email))
                     if let completion = completion {
                         completion(userId: user.uid)
                     } else {
-                        store.dispatch(UserLoggedIn(userId: user.uid, email: email, password: password))
+                        store.dispatch(UserLoggedIn(userId: user.uid, email: email))
                     }
                 } else {
                     store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.SignUpFailedLogIn))
@@ -271,23 +271,16 @@ public extension FirebaseAccess {
     - userId: The id of the user
     - emailVerified: Status of user’s email verification
     - email: Email address of user
-    - password: Password of user
  */
-public struct UserLoggedIn: FirebaseAuthenticationAction, CustomStringConvertible {
+public struct UserLoggedIn: FirebaseAuthenticationAction {
     public var userId: String
     public var emailVerified: Bool
     public var email: String
-    public var password: String
     
-    public init(userId: String, emailVerified: Bool = false, email: String, password: String) {
+    public init(userId: String, emailVerified: Bool = false, email: String) {
         self.userId = userId
         self.emailVerified = emailVerified
         self.email = email
-        self.password = password
-    }
-    
-    public var description: String {
-        return "UserLoggedIn(userId: \(userId), email: \(email), emailVerified: \(emailVerified))"
     }
 }
 
@@ -296,21 +289,14 @@ public struct UserLoggedIn: FirebaseAuthenticationAction, CustomStringConvertibl
  - Parameters
     - userId: The id of the user
     - email: Email address of user
-    - password: Password of user
  */
-public struct UserSignedUp: FirebaseAuthenticationAction, CustomStringConvertible {
+public struct UserSignedUp: FirebaseAuthenticationAction {
     public var userId: String
     public var email: String
-    public var password: String
     
-    public init(userId: String, email: String, password: String) {
+    public init(userId: String, email: String) {
         self.userId = userId
         self.email = email
-        self.password = password
-    }
-    
-    public var description: String {
-        return "UserSignedUp(userId: \(userId), email: \(email))"
     }
 }
 
