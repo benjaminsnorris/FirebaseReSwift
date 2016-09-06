@@ -233,10 +233,12 @@ public extension FirebaseAccess {
         return { state, store in
             guard let currentApp = self.currentApp, auth = FIRAuth(app: currentApp) else { return nil }
             auth.sendPasswordResetWithEmail(email) { error in
-                if let error = error {
-                    store.dispatch(UserAuthFailed(error: error))
-                } else {
-                    store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.PasswordReset))
+                dispatch_async(dispatch_get_main_queue()) {
+                    if let error = error {
+                        store.dispatch(UserAuthFailed(error: error))
+                    } else {
+                        store.dispatch(UserAuthenticationAction(action: FirebaseAuthenticationEvent.PasswordReset))
+                    }
                 }
             }
             return nil
