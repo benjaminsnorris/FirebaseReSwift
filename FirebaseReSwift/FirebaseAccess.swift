@@ -162,9 +162,14 @@ public extension FirebaseAccess {
     public func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void) {
         objectRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
             guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(objectJSON: nil); return }
-            guard var json = snapshot.value as? JSONObject else { completion(objectJSON: nil); return }
-            json["id"] = snapshot.key
-            completion(objectJSON: json)
+            if var json = snapshot.value as? JSONObject {
+                json["id"] = snapshot.key
+                completion(objectJSON: json)
+            } else if let value = snapshot.value {
+                completion(objectJSON: [snapshot.key: value])
+            } else {
+                completion(objectJSON: nil)
+            }
         })
     }
     
