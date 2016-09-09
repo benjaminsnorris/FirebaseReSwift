@@ -40,6 +40,7 @@ public protocol FirebaseAccess {
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
+    func observeObject(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void)
     func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
     
     
@@ -161,16 +162,33 @@ public extension FirebaseAccess {
      */
     public func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void) {
         objectRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(objectJSON: nil); return }
-            if var json = snapshot.value as? JSONObject {
-                json["id"] = snapshot.key
-                completion(objectJSON: json)
-            } else if let value = snapshot.value {
-                completion(objectJSON: [snapshot.key: value])
-            } else {
-                completion(objectJSON: nil)
-            }
+            self.process(snapshot: snapshot, callback: completion)
         })
+    }
+    
+    /**
+     Observes all events for a given ref and calls the callback with each event emitted.
+     
+     - Parameters:
+     - ref:          A Firebase database reference to the data object
+     - completion:   A closure to run after retrieving the data and parsing it
+     */
+    public func observeObject(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) {
+        objectRef.observeEventType(.Value, withBlock: { snapshot in
+            self.process(snapshot: snapshot, callback: callback)
+        })
+    }
+    
+    private func process(snapshot snapshot: FIRDataSnapshot, callback: (objectJSON: JSONObject?) -> Void) {
+        guard snapshot.exists() && !(snapshot.value is NSNull) else { callback(objectJSON: nil); return }
+        if var json = snapshot.value as? JSONObject {
+            json["id"] = snapshot.key
+            callback(objectJSON: json)
+        } else if let value = snapshot.value {
+            callback(objectJSON: [snapshot.key: value])
+        } else {
+            callback(objectJSON: nil)
+        }
     }
     
     /**
