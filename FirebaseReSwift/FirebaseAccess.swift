@@ -41,6 +41,7 @@ public protocol FirebaseAccess {
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
     func observeObject(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void)
+    func stopObservingObject<T: StateType>(objectRef: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
     
     
@@ -157,7 +158,7 @@ public extension FirebaseAccess {
      to the completion handler.
      
      - Parameters:
-     - ref:          A Firebase database reference to the data object
+     - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
     public func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void) {
@@ -170,7 +171,7 @@ public extension FirebaseAccess {
      Observes all events for a given ref and calls the callback with each event emitted.
      
      - Parameters:
-     - ref:          A Firebase database reference to the data object
+     - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
     public func observeObject(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) {
@@ -188,6 +189,18 @@ public extension FirebaseAccess {
             callback(objectJSON: [snapshot.key: value])
         } else {
             callback(objectJSON: nil)
+        }
+    }
+    
+    /**
+     Remove all observers for the specific ref.
+     
+     - parameter objectRef: A Firebase database reference to the data object
+     */
+    public func stopObservingObject<T: StateType>(objectRef: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            objectRef.removeAllObservers()
+            return nil
         }
     }
     
