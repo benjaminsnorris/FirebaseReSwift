@@ -33,6 +33,19 @@ public enum FirebaseSubscriptionError: ErrorType {
     case MalformedData(path: String)
 }
 
+extension FirebaseSubscriptionError: Equatable { }
+
+public func ==(lhs: FirebaseSubscriptionError, rhs: FirebaseSubscriptionError) -> Bool {
+    switch (lhs, rhs) {
+    case (.NoData(_), .NoData(_)):
+        return true
+    case (.MalformedData(_), .MalformedData(_)):
+        return true
+    default:
+        return false
+    }
+}
+
 /**
  This protocol is adopted by a state object in order to receive updates of a specific
  data object from Firebase.
