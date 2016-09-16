@@ -30,7 +30,7 @@ public protocol FirebaseDataAction: Action { }
      - T:       The type of object that was added.
      - object:  The actual object that was added.
  */
-public struct ObjectAdded<T>: Action, FirebaseDataAction {
+public struct ObjectAdded<T>: FirebaseDataAction {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -42,7 +42,7 @@ public struct ObjectAdded<T>: Action, FirebaseDataAction {
      - T:       The type of object that was changed.
      - object:  The actual object that was changed.
  */
-public struct ObjectChanged<T>: Action, FirebaseDataAction {
+public struct ObjectChanged<T>: FirebaseDataAction {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -54,7 +54,7 @@ public struct ObjectChanged<T>: Action, FirebaseDataAction {
      - T:       The type of object that was removed.
      - object:  The actual object that was removed.
  */
-public struct ObjectRemoved<T>: Action, FirebaseDataAction {
+public struct ObjectRemoved<T>: FirebaseDataAction {
     public var object: T
     public init(object: T) { self.object = object }
 }
@@ -78,7 +78,22 @@ public struct ObjectErrored<T>: Action, FirebaseMinorErrorAction {
      - T:           The type of state that can be subscribed or not
      - subscribed:  Flag indicating subscription status
  */
-public struct ObjectSubscribed<T>: Action, FirebaseDataAction {
+public struct ObjectSubscribed<T>: FirebaseDataAction {
     public var subscribed: Bool
     public init(subscribed: Bool) { self.subscribed = subscribed }
+}
+
+/**
+ Action indicating that an object changed observed status.
+ - Parameters:
+    - path:     The path of the ref to the object
+    - observed: Flag indicating when the object is being observed
+ */
+public struct ObjectObserved: FirebaseDataAction {
+    public var path: String
+    public var observed: Bool
+    public init(path: String, observed: Bool) {
+        self.path = path
+        self.observed = observed
+    }
 }

@@ -40,7 +40,7 @@ public protocol FirebaseAccess {
     func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
     func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
-    func observeObject(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void)
+    func observeObject<T: StateType>(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) -> (state: T, store: Store<T>) -> Action?
     func stopObservingObject<T: StateType>(objectRef: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
     func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
     
@@ -174,10 +174,13 @@ public extension FirebaseAccess {
      - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func observeObject(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) {
-        objectRef.observeEventType(.Value, withBlock: { snapshot in
-            self.process(snapshot: snapshot, callback: callback)
-        })
+    public func observeObject<T: StateType>(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) -> (state: T, store: Store<T>) -> Action? {
+        return { state, store in
+            objectRef.observeEventType(.Value, withBlock: { snapshot in
+                self.process(snapshot: snapshot, callback: callback)
+            })
+            return ObjectObserved(path: objectRef.description(), observed: true)
+        }
     }
     
     private func process(snapshot snapshot: FIRDataSnapshot, callback: (objectJSON: JSONObject?) -> Void) {
@@ -200,7 +203,7 @@ public extension FirebaseAccess {
     public func stopObservingObject<T: StateType>(objectRef: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action? {
         return { state, store in
             objectRef.removeAllObservers()
-            return nil
+            return ObjectObserved(path: objectRef.description(), observed: false)
         }
     }
     
