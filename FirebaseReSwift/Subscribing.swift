@@ -56,7 +56,6 @@ public func ==(lhs: FirebaseSubscriptionError, rhs: FirebaseSubscriptionError) -
 
 public extension SubscribingState {
     
-    typealias SubscribingType = Self
     typealias ObjectType = Self.SubscribingObject
     
     /**
@@ -142,7 +141,7 @@ public extension SubscribingState {
                     }
                 })
                 
-                return ObjectSubscribed<SubscribingType>(subscribed: true)
+                return ObjectSubscribed(subscribed: true, state: self)
             }
             
             return nil
@@ -160,7 +159,7 @@ public extension SubscribingState {
         return { state, store in
             if self.subscribed {
                 query.removeAllObservers()
-                return ObjectSubscribed<SubscribingType>(subscribed: false)
+                return ObjectSubscribed(subscribed: false, state: self)
             }
             return nil
         }

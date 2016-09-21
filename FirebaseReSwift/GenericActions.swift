@@ -80,7 +80,11 @@ public struct ObjectErrored<T>: Action, FirebaseMinorErrorAction {
  */
 public struct ObjectSubscribed<T>: FirebaseDataAction {
     public var subscribed: Bool
-    public init(subscribed: Bool) { self.subscribed = subscribed }
+    public var state: T
+    public init(subscribed: Bool, state: T) {
+        self.subscribed = subscribed
+        self.state = state
+    }
 }
 
 /**
