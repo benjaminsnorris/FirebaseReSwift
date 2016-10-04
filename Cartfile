@@ -1,2 +1,2 @@
-github "ReSwift/ReSwift" ~> 1.0.0
-github "utahiosmac/Marshal" ~> 0.9
+github "ReSwift/ReSwift" ~> 2.1
+github "utahiosmac/Marshal" ~> 1.0
