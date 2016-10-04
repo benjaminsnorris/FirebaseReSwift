@@ -36,27 +36,27 @@ public protocol FirebaseAccess {
     // MARK: - Overridable API functions
     
     func newObjectId() -> String
-    func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
-    func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action?
-    func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
-    func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void)
-    func observeObject<T: StateType>(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) -> (state: T, store: Store<T>) -> Action?
-    func stopObservingObject<T: StateType>(objectRef: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action?
-    func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void)
+    func createObject<T: StateType>(_ ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
+    func updateObject<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
+    func removeObject<T: StateType>(_ ref: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
+    func getObject(_ objectRef: FIRDatabaseReference, completion: (_ objectJSON: JSONObject?) -> Void)
+    func observeObject<T: StateType>(_ objectRef: FIRDatabaseReference, _ callback: (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action?
+    func stopObservingObject<T: StateType>(_ objectRef: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
+    func search(_ baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (_ json: JSONObject?) -> Void)
     
     
     // MARK: - Overridable authentication functions
     
     func getUserId() -> String?
     func getUserEmailVerified() -> Bool
-    func sendEmailVerification<T: StateType>(state: T, store: Store<T>) -> Action?
-    func reloadCurrentUser<T: StateType>(state: T, store: Store<T>) -> Action?
-    func logInUser<T: StateType>(email: String, password: String) -> (state: T, store: Store<T>) -> Action?
-    func signUpUser<T: StateType>(email: String, password: String, completion: ((userId: String?) -> Void)?) -> (state: T, store: Store<T>) -> Action?
-    func changeUserPassword<T: StateType>(newPassword: String) -> (state: T, store: Store<T>) -> Action?
-    func changeUserEmail<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action?
-    func resetPassword<T: StateType>(email: String) -> (state: T, store: Store<T>) -> Action?
-    func logOutUser<T: StateType>(state: T, store: Store<T>) -> Action?
+    func sendEmailVerification<T: StateType>(_ state: T, store: Store<T>) -> Action?
+    func reloadCurrentUser<T: StateType>(_ state: T, store: Store<T>) -> Action?
+    func logInUser<T: StateType>(_ email: String, password: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func signUpUser<T: StateType>(_ email: String, password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action?
+    func changeUserPassword<T: StateType>(_ newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func changeUserEmail<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func resetPassword<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func logOutUser<T: StateType>(_ state: T, store: Store<T>) -> Action?
 }
 
 public extension FirebaseAccess {
@@ -84,12 +84,12 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(_ ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             var parameters = parameters
             if removeId {
-                parameters.removeValueForKey("id")
+                parameters.removeValue(forKey: "id")
             }
             finalRef.setValue(parameters)
             return nil
@@ -108,7 +108,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func updateObject<T: StateType>(ref: FIRDatabaseReference, parameters: JSONObject) -> (state: T, store: Store<T>) -> Action? {
+    public func updateObject<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             self.recursivelyUpdate(ref, parameters: parameters)
             return nil
@@ -125,7 +125,7 @@ public extension FirebaseAccess {
         - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
         fields to be updated with their values.
     */
-    func recursivelyUpdate(ref: FIRDatabaseReference, parameters: JSONObject) {
+    func recursivelyUpdate(_ ref: FIRDatabaseReference, parameters: JSONObject) {
         var result = JSONObject()
         for (key, value) in parameters {
             if let object = value as? JSONObject {
@@ -146,7 +146,7 @@ public extension FirebaseAccess {
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
      type matches the `state` parameter.
      */
-    public func removeObject<T: StateType>(ref: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action? {
+    public func removeObject<T: StateType>(_ ref: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             ref.removeValue()
             return nil
@@ -161,8 +161,8 @@ public extension FirebaseAccess {
      - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func getObject(objectRef: FIRDatabaseReference, completion: (objectJSON: JSONObject?) -> Void) {
-        objectRef.observeSingleEventOfType(.Value, withBlock: { snapshot in
+    public func getObject(_ objectRef: FIRDatabaseReference, completion: @escaping (_ objectJSON: JSONObject?) -> Void) {
+        objectRef.observeSingleEvent(of: .value, with: { snapshot in
             self.process(snapshot: snapshot, callback: completion)
         })
     }
@@ -174,24 +174,24 @@ public extension FirebaseAccess {
      - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func observeObject<T: StateType>(objectRef: FIRDatabaseReference, _ callback: (objectJSON: JSONObject?) -> Void) -> (state: T, store: Store<T>) -> Action? {
+    public func observeObject<T: StateType>(_ objectRef: FIRDatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            objectRef.observeEventType(.Value, withBlock: { snapshot in
+            objectRef.observe(.value, with: { snapshot in
                 self.process(snapshot: snapshot, callback: callback)
             })
             return ObjectObserved(path: objectRef.description(), observed: true)
         }
     }
     
-    private func process(snapshot snapshot: FIRDataSnapshot, callback: (objectJSON: JSONObject?) -> Void) {
-        guard snapshot.exists() && !(snapshot.value is NSNull) else { callback(objectJSON: nil); return }
+    fileprivate func process(snapshot: FIRDataSnapshot, callback: (_ objectJSON: JSONObject?) -> Void) {
+        guard snapshot.exists() && !(snapshot.value is NSNull) else { callback(nil); return }
         if var json = snapshot.value as? JSONObject {
             json["id"] = snapshot.key
-            callback(objectJSON: json)
+            callback(json)
         } else if let value = snapshot.value {
-            callback(objectJSON: [snapshot.key: value])
+            callback([snapshot.key: value])
         } else {
-            callback(objectJSON: nil)
+            callback(nil)
         }
     }
     
@@ -200,7 +200,7 @@ public extension FirebaseAccess {
      
      - parameter objectRef: A Firebase database reference to the data object
      */
-    public func stopObservingObject<T: StateType>(objectRef: FIRDatabaseReference) -> (state: T, store: Store<T>) -> Action? {
+    public func stopObservingObject<T: StateType>(_ objectRef: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             objectRef.removeAllObservers()
             return ObjectObserved(path: objectRef.description(), observed: false)
@@ -217,12 +217,12 @@ public extension FirebaseAccess {
      - value:       The search term to query
      - completion:  A closure to run after retrieving the data and parsing as JSON
      */
-    public func search(baseQuery: FIRDatabaseQuery, key: String, value: String, completion: (json: JSONObject?) -> Void) {
-        let query = baseQuery.queryOrderedByChild(key).queryEqualToValue(value)
-        query.observeSingleEventOfType(.Value, withBlock: { snapshot in
-            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(json: nil); return }
-            guard let json = snapshot.value as? JSONObject else { completion(json: nil); return }
-            completion(json: json)
+    public func search(_ baseQuery: FIRDatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void) {
+        let query = baseQuery.queryOrdered(byChild: key).queryEqual(toValue: value)
+        query.observeSingleEvent(of: .value, with: { snapshot in
+            guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(nil); return }
+            guard let json = snapshot.value as? JSONObject else { completion(nil); return }
+            completion(json)
         })
     }
     

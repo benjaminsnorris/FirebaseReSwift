@@ -2,7 +2,6 @@ framework module FirebaseAuth {
   umbrella header "FirebaseAuth.h"
 
   export *
-  module * {export * }
 
   header "FIRAuth.h"
   header "FIRAuthCredential.h"
@@ -18,4 +17,6 @@ framework module FirebaseAuth {
   link framework "Security"
 
   use FirebaseAnalytics
+  use GoogleUtilities
+  use GoogleNetworkingUtilities
 }

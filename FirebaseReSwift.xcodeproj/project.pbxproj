@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70630FBC1DA466760037399D /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70630FBB1DA466760037399D /* FirebaseCore.framework */; };
 		70B21BC81CCEE25D00E329A6 /* FirebaseReSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70B21BCF1CCEE25D00E329A6 /* FirebaseReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */; };
 		70B21BD41CCEE25D00E329A6 /* FirebaseReSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */; };
@@ -39,6 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		70630FBB1DA466760037399D /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Vendor/Firebase/FirebaseCore.framework; sourceTree = "<group>"; };
 		70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FirebaseReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirebaseReSwift.h; sourceTree = "<group>"; };
 		70B21BC91CCEE25D00E329A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -79,6 +81,7 @@
 				70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */,
 				70CC54781CF36F7A000E875B /* FirebaseAnalytics.framework in Frameworks */,
 				70CC547F1CF36F7A000E875B /* GoogleUtilities.framework in Frameworks */,
+				70630FBC1DA466760037399D /* FirebaseCore.framework in Frameworks */,
 				70CC547A1CF36F7A000E875B /* FirebaseDatabase.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -94,12 +97,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		70630FBA1DA466760037399D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				70CC54801CF3701D000E875B /* Firebase.h */,
+				70CC54841CF3A1B6000E875B /* libicucore.tbd */,
+				70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */,
+				70CC54711CF36F7A000E875B /* FirebaseAuth.framework */,
+				70CC54721CF36F7A000E875B /* FirebaseDatabase.framework */,
+				70CC54731CF36F7A000E875B /* FirebaseInstanceID.framework */,
+				70CC54741CF36F7A000E875B /* GoogleInterchangeUtilities.framework */,
+				70CC54751CF36F7A000E875B /* GoogleNetworkingUtilities.framework */,
+				70CC54761CF36F7A000E875B /* GoogleSymbolUtilities.framework */,
+				70CC54771CF36F7A000E875B /* GoogleUtilities.framework */,
+				70B21BE01CCEE43200E329A6 /* ReSwift.framework */,
+				70B21BDE1CCEE42A00E329A6 /* Marshal.framework */,
+				70630FBB1DA466760037399D /* FirebaseCore.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		70B21BBA1CCEE25D00E329A6 = {
 			isa = PBXGroup;
 			children = (
 				70B21BC61CCEE25D00E329A6 /* FirebaseReSwift */,
 				70B21BD21CCEE25D00E329A6 /* FirebaseReSwiftTests */,
 				70B21BC51CCEE25D00E329A6 /* Products */,
+				70630FBA1DA466760037399D /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -122,7 +146,6 @@
 				70B21BF11CCEE7E900E329A6 /* GenericActions.swift */,
 				70B21BC91CCEE25D00E329A6 /* Info.plist */,
 				70CC54821CF37027000E875B /* module.modulemap */,
-				70B21BE21CCEE43700E329A6 /* Frameworks */,
 			);
 			path = FirebaseReSwift;
 			sourceTree = "<group>";
@@ -134,26 +157,6 @@
 				70B21BD51CCEE25D00E329A6 /* Info.plist */,
 			);
 			path = FirebaseReSwiftTests;
-			sourceTree = "<group>";
-		};
-		70B21BE21CCEE43700E329A6 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				70CC54801CF3701D000E875B /* Firebase.h */,
-				70CC54841CF3A1B6000E875B /* libicucore.tbd */,
-				70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */,
-				70CC54711CF36F7A000E875B /* FirebaseAuth.framework */,
-				70CC54721CF36F7A000E875B /* FirebaseDatabase.framework */,
-				70CC54731CF36F7A000E875B /* FirebaseInstanceID.framework */,
-				70CC54741CF36F7A000E875B /* GoogleInterchangeUtilities.framework */,
-				70CC54751CF36F7A000E875B /* GoogleNetworkingUtilities.framework */,
-				70CC54761CF36F7A000E875B /* GoogleSymbolUtilities.framework */,
-				70CC54771CF36F7A000E875B /* GoogleUtilities.framework */,
-				70B21BE01CCEE43200E329A6 /* ReSwift.framework */,
-				70B21BDE1CCEE42A00E329A6 /* Marshal.framework */,
-			);
-			name = Frameworks;
-			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -214,14 +217,16 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "BSN Design";
 				TargetAttributes = {
 					70B21BC31CCEE25D00E329A6 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 					70B21BCD1CCEE25D00E329A6 = {
 						CreatedOnToolsVersion = 7.3;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -305,8 +310,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -354,8 +361,10 @@
 				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
 				CLANG_WARN_EMPTY_BODY = YES;
 				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
 				CLANG_WARN_INT_CONVERSION = YES;
 				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
@@ -375,6 +384,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.3;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -387,6 +397,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -408,6 +419,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Vendor/Firebase";
 			};
 			name = Debug;
@@ -417,6 +429,7 @@
 			buildSettings = {
 				APPLICATION_EXTENSION_API_ONLY = NO;
 				CLANG_ENABLE_MODULES = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
@@ -437,6 +450,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = design.bsn.FirebaseReSwift;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 3.0;
 				USER_HEADER_SEARCH_PATHS = "$(PROJECT_DIR)/Vendor/Firebase";
 			};
 			name = Release;
@@ -450,6 +464,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = design.bsn.FirebaseReSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -462,6 +477,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = design.bsn.FirebaseReSwiftTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

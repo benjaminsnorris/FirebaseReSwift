@@ -11,12 +11,12 @@ import Marshal
 
 /// Simple protocol to help categorize actions
 public protocol FirebaseSeriousErrorAction: Action {
-    var error: ErrorType { get }
+    var error: Error { get }
 }
 
 /// Simple protocol to help categorize actions
 public protocol FirebaseMinorErrorAction: Action {
-    var error: ErrorType { get }
+    var error: Error { get }
 }
 
 /// Empty protocol to help categorize actions
@@ -67,8 +67,8 @@ public struct ObjectRemoved<T>: FirebaseDataAction {
      - error:   An optional error indicating the problem that occurred
  */
 public struct ObjectErrored<T>: Action, FirebaseMinorErrorAction {
-    public var error: ErrorType
-    public init(error: ErrorType) { self.error = error }
+    public var error: Error
+    public init(error: Error) { self.error = error }
 }
 
 /**
