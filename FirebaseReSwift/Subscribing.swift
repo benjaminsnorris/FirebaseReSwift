@@ -28,18 +28,18 @@ public protocol EndpointNaming {
  - `NoData`:    The snapshot for the event contained no data
  - `MalformedData`:  The data in the snapshot could not be parsed as JSON
  */
-public enum FirebaseSubscriptionError: ErrorType {
-    case NoData(path: String)
-    case MalformedData(path: String)
+public enum FirebaseSubscriptionError: Error {
+    case noData(path: String)
+    case malformedData(path: String)
 }
 
 extension FirebaseSubscriptionError: Equatable { }
 
 public func ==(lhs: FirebaseSubscriptionError, rhs: FirebaseSubscriptionError) -> Bool {
     switch (lhs, rhs) {
-    case (.NoData(_), .NoData(_)):
+    case (.noData(_), .noData(_)):
         return true
-    case (.MalformedData(_), .MalformedData(_)):
+    case (.malformedData(_), .malformedData(_)):
         return true
     default:
         return false
@@ -79,19 +79,19 @@ public extension SubscribingState {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func subscribeToObjects<T: StateType>(query: FIRDatabaseQuery) -> (state: T, store: Store<T>) -> Action? {
+    public func subscribeToObjects<T: StateType>(_ query: FIRDatabaseQuery) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             if !self.subscribed {
                 let idKey = "id"
                 
                 // Additions
-                query.observeEventType(.ChildAdded, withBlock: { snapshot in
+                query.observe(.childAdded, with: { snapshot in
                     guard snapshot.exists() && !(snapshot.value is NSNull) else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.noData(path: query.ref.description())))
                         return
                     }
                     guard var json = snapshot.value as? JSONObject else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.malformedData(path: query.ref.description())))
                         return
                     }
                     json[idKey] = snapshot.key
@@ -104,13 +104,13 @@ public extension SubscribingState {
                 })
                 
                 // Changes
-                query.observeEventType(.ChildChanged, withBlock: { snapshot in
+                query.observe(.childChanged, with: { snapshot in
                     guard snapshot.exists() && !(snapshot.value is NSNull) else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.noData(path: query.ref.description())))
                         return
                     }
                     guard var json = snapshot.value as? JSONObject else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.malformedData(path: query.ref.description())))
                         return
                     }
                     json[idKey] = snapshot.key
@@ -123,13 +123,13 @@ public extension SubscribingState {
                 })
                 
                 // Removals
-                query.observeEventType(.ChildRemoved, withBlock: { snapshot in
+                query.observe(.childRemoved, with: { snapshot in
                     guard snapshot.exists() && !(snapshot.value is NSNull) else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.NoData(path: query.ref.description())))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.noData(path: query.ref.description())))
                         return
                     }
                     guard var json = snapshot.value as? JSONObject else {
-                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.MalformedData(path: query.ref.description())))
+                        store.dispatch(ObjectErrored<ObjectType>(error: FirebaseSubscriptionError.malformedData(path: query.ref.description())))
                         return
                     }
                     json[idKey] = snapshot.key
@@ -155,7 +155,7 @@ public extension SubscribingState {
      
      - Parameter query: The query that was originally used to subscribe to events.
      */
-    public func removeSubscriptions<T: StateType>(query: FIRDatabaseQuery) -> (state: T, store: Store<T>) -> Action? {
+    public func removeSubscriptions<T: StateType>(_ query: FIRDatabaseQuery) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             if self.subscribed {
                 query.removeAllObservers()
