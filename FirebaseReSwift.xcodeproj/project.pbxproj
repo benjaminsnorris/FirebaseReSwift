@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		70630FBC1DA466760037399D /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70630FBB1DA466760037399D /* FirebaseCore.framework */; };
+		707B90EF1DA595C0000202A0 /* Firebase+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707B90EE1DA595C0000202A0 /* Firebase+Random.swift */; };
 		70B21BC81CCEE25D00E329A6 /* FirebaseReSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70B21BCF1CCEE25D00E329A6 /* FirebaseReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */; };
 		70B21BD41CCEE25D00E329A6 /* FirebaseReSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */; };
@@ -41,6 +42,7 @@
 
 /* Begin PBXFileReference section */
 		70630FBB1DA466760037399D /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Vendor/Firebase/FirebaseCore.framework; sourceTree = "<group>"; };
+		707B90EE1DA595C0000202A0 /* Firebase+Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Firebase+Random.swift"; sourceTree = "<group>"; };
 		70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FirebaseReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirebaseReSwift.h; sourceTree = "<group>"; };
 		70B21BC91CCEE25D00E329A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 				70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */,
 				70B21BEF1CCEE7A800E329A6 /* FirebaseAccess.swift */,
 				70B21BFB1CD0136700E329A6 /* FirebaseAuthentication.swift */,
+				707B90EE1DA595C0000202A0 /* Firebase+Random.swift */,
 				70B21BF31CCFBB3400E329A6 /* Subscribing.swift */,
 				70B21BF11CCEE7E900E329A6 /* GenericActions.swift */,
 				70B21BC91CCEE25D00E329A6 /* Info.plist */,
@@ -274,6 +277,7 @@
 				70B21BF21CCEE7E900E329A6 /* GenericActions.swift in Sources */,
 				70B21BF41CCFBB3400E329A6 /* Subscribing.swift in Sources */,
 				70B21BF01CCEE7A800E329A6 /* FirebaseAccess.swift in Sources */,
+				707B90EF1DA595C0000202A0 /* Firebase+Random.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

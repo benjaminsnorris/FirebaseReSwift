@@ -1,7 +1,7 @@
 /*
  |  _   ____   ____   _
- | ⎛ |‾|  ⚈ |-| ⚈  |‾| ⎞
- | ⎝ |  ‾‾‾‾| |‾‾‾‾  | ⎠
+ | | |‾|  ⚈ |-| ⚈  |‾| |
+ | | |  ‾‾‾‾| |‾‾‾‾  | |
  |  ‾        ‾        ‾
  */
 
@@ -17,7 +17,7 @@ public extension FIRApp {
         }
         let randomName = String(randomNumber)
         let options = ref.database.app!.options
-        FIRApp.configureWithName(randomName, options: options)
+        FIRApp.configure(withName: randomName, options: options)
         return FIRApp(named: randomName)!
     }
     
