@@ -49,14 +49,14 @@ public protocol FirebaseAccess {
     
     func getUserId() -> String?
     func getUserEmailVerified() -> Bool
-    func sendEmailVerification<T: StateType>(_ state: T, store: Store<T>) -> Action?
-    func reloadCurrentUser<T: StateType>(_ state: T, store: Store<T>) -> Action?
+    func sendEmailVerification<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
+    func reloadCurrentUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
     func logInUser<T: StateType>(_ email: String, password: String) -> (_ state: T, _ store: Store<T>) -> Action?
     func signUpUser<T: StateType>(_ email: String, password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action?
     func changeUserPassword<T: StateType>(_ newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action?
     func changeUserEmail<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action?
     func resetPassword<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action?
-    func logOutUser<T: StateType>(_ state: T, store: Store<T>) -> Action?
+    func logOutUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
 }
 
 public extension FirebaseAccess {
