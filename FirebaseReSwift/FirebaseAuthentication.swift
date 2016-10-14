@@ -91,13 +91,19 @@ public extension FirebaseAccess {
     }
     
     /**
-     Sends verification email to current user.
+     Sends verification email to specified user, or current user if not specified.
      */
-    public func sendEmailVerification<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func sendEmailVerification<T: StateType>(to user: FIRUser?) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
-            guard let user = auth.currentUser else { return nil }
-            user.sendEmailVerification { error in
+            let emailUser: FIRUser
+            if let user = user {
+                emailUser = user
+            } else {
+                guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+                guard let user = auth.currentUser else { return nil }
+                emailUser = user
+            }
+            emailUser.sendEmailVerification { error in
                 if let error = error {
                     store.dispatch(EmailVerificationError(error: error))
                 } else {
