@@ -126,7 +126,7 @@ public extension FirebaseAccess {
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func logInUser<T: StateType>(_ email: String, password: String) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func logInUser<T: StateType>(with email: String, and password: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
             auth.signIn(withEmail: email, password: password) { user, error in
@@ -153,7 +153,7 @@ public extension FirebaseAccess {
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func signUpUser<T: StateType>(_ email: String, password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func signUpUser<T: StateType>(with email: String, and password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
             auth.createUser(withEmail: email, password: password) { user, error in
@@ -185,7 +185,7 @@ public extension FirebaseAccess {
      - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func changeUserPassword<T: StateType>(_ newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func changeUserPassword<T: StateType>(to newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
             guard let user = auth.currentUser else {
@@ -212,7 +212,7 @@ public extension FirebaseAccess {
      - returns:         An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func changeUserEmail<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func changeUserEmail<T: StateType>(to email: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
             guard let user = auth.currentUser else {
@@ -239,7 +239,7 @@ public extension FirebaseAccess {
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func resetPassword<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func resetPassword<T: StateType>(for email: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
             auth.sendPasswordReset(withEmail: email) { error in

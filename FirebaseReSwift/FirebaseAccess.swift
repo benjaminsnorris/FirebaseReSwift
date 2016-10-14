@@ -51,11 +51,11 @@ public protocol FirebaseAccess {
     func getUserEmailVerified() -> Bool
     func sendEmailVerification<T: StateType>(to user: FIRUser?) -> (_ state: T, _ store: Store<T>) -> Action?
     func reloadCurrentUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
-    func logInUser<T: StateType>(_ email: String, password: String) -> (_ state: T, _ store: Store<T>) -> Action?
-    func signUpUser<T: StateType>(_ email: String, password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action?
-    func changeUserPassword<T: StateType>(_ newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action?
-    func changeUserEmail<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action?
-    func resetPassword<T: StateType>(_ email: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func logInUser<T: StateType>(with email: String, and password: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func signUpUser<T: StateType>(with email: String, and password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action?
+    func changeUserPassword<T: StateType>(to newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func changeUserEmail<T: StateType>(to email: String) -> (_ state: T, _ store: Store<T>) -> Action?
+    func resetPassword<T: StateType>(for email: String) -> (_ state: T, _ store: Store<T>) -> Action?
     func logOutUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
 }
 
