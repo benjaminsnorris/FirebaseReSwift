@@ -101,3 +101,13 @@ public struct ObjectObserved: FirebaseDataAction {
         self.observed = observed
     }
 }
+
+/**
+ Action indicating that connection to Firebase changed status.
+ - parameter connected: Bool value indicating whether the client is connected
+    to Firebase
+ */
+public struct FirebaseConnectionChanged: FirebaseDataAction {
+    public var connected: Bool
+    public init(connected: Bool) { self.connected = connected }
+}

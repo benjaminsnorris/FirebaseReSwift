@@ -43,7 +43,8 @@ public protocol FirebaseAccess {
     func observeObject<T: StateType>(_ objectRef: FIRDatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action?
     func stopObservingObject<T: StateType>(_ objectRef: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
     func search(_ baseQuery: FIRDatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void)
-    
+    func monitorConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
+    func stopMonitoringConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
     
     // MARK: - Overridable authentication functions
     
@@ -224,6 +225,37 @@ public extension FirebaseAccess {
             guard let json = snapshot.value as? JSONObject else { completion(nil); return }
             completion(json)
         })
+    }
+    
+    /**
+     Monitors connection status and dispatches an action when it changes.
+     
+     - Returns Action: `FirebaseConnectionChanged` action with information
+        on the connection change
+     */
+    public func monitorConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action? {
+        return { state, store in
+            let connectedRef = self.ref.child(".info/connected")
+            connectedRef.observe(.value, with: { snapshot in
+                if let connected = snapshot.value as? Bool, connected {
+                    store.dispatch(FirebaseConnectionChanged(connected: connected))
+                } else {
+                    store.dispatch(FirebaseConnectionChanged(connected: false))
+                }
+            })
+            return nil
+        }
+    }
+    
+    /**
+     Ends monitoring of connection status.
+     */
+    public func stopMonitoringConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action? {
+        return { state, store in
+            let connectedRef = self.ref.child(".info/connected")
+            connectedRef.removeAllObservers()
+            return nil
+        }
     }
     
 }
