@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		70630FBC1DA466760037399D /* FirebaseCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70630FBB1DA466760037399D /* FirebaseCore.framework */; };
 		707B90EF1DA595C0000202A0 /* Firebase+Random.swift in Sources */ = {isa = PBXBuildFile; fileRef = 707B90EE1DA595C0000202A0 /* Firebase+Random.swift */; };
+		709FB9EF1DF0A78900611164 /* FirebaseStorage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 709FB9EE1DF0A78900611164 /* FirebaseStorage.framework */; };
 		70B21BC81CCEE25D00E329A6 /* FirebaseReSwift.h in Headers */ = {isa = PBXBuildFile; fileRef = 70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		70B21BCF1CCEE25D00E329A6 /* FirebaseReSwift.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */; };
 		70B21BD41CCEE25D00E329A6 /* FirebaseReSwiftTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70B21BD31CCEE25D00E329A6 /* FirebaseReSwiftTests.swift */; };
@@ -43,6 +44,7 @@
 /* Begin PBXFileReference section */
 		70630FBB1DA466760037399D /* FirebaseCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseCore.framework; path = Vendor/Firebase/FirebaseCore.framework; sourceTree = "<group>"; };
 		707B90EE1DA595C0000202A0 /* Firebase+Random.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Firebase+Random.swift"; sourceTree = "<group>"; };
+		709FB9EE1DF0A78900611164 /* FirebaseStorage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = FirebaseStorage.framework; path = Vendor/Firebase/FirebaseStorage.framework; sourceTree = "<group>"; };
 		70B21BC41CCEE25D00E329A6 /* FirebaseReSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FirebaseReSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		70B21BC71CCEE25D00E329A6 /* FirebaseReSwift.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FirebaseReSwift.h; sourceTree = "<group>"; };
 		70B21BC91CCEE25D00E329A6 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -78,6 +80,7 @@
 				70CC547C1CF36F7A000E875B /* GoogleInterchangeUtilities.framework in Frameworks */,
 				70B21BE11CCEE43200E329A6 /* ReSwift.framework in Frameworks */,
 				70C2BAF01DD4E513005DD525 /* GTMSessionFetcher.framework in Frameworks */,
+				709FB9EF1DF0A78900611164 /* FirebaseStorage.framework in Frameworks */,
 				70CC547B1CF36F7A000E875B /* FirebaseInstanceID.framework in Frameworks */,
 				70CC54791CF36F7A000E875B /* FirebaseAuth.framework in Frameworks */,
 				70B21BDF1CCEE42A00E329A6 /* Marshal.framework in Frameworks */,
@@ -102,6 +105,7 @@
 		70630FBA1DA466760037399D /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				709FB9EE1DF0A78900611164 /* FirebaseStorage.framework */,
 				70CC54801CF3701D000E875B /* Firebase.h */,
 				70CC54841CF3A1B6000E875B /* libicucore.tbd */,
 				70CC54701CF36F7A000E875B /* FirebaseAnalytics.framework */,
