@@ -86,10 +86,8 @@ should make sure to include all of the frameworks from X when including the SDK.
   - FirebaseInvites.framework
   - GTMOAuth2.framework
   - GTMSessionFetcher.framework
+  - GoogleAPIClientForREST.framework
   - GoogleAppUtilities.framework
-  - GoogleNetworkingUtilities.framework
-  - GoogleParsingUtilities.framework
-  - GooglePlusUtilities.framework
   - GoogleSignIn.framework
 
   You'll also need to add the resources in the
@@ -123,27 +121,25 @@ Pod in its next major version increase.
 
            CocoaPod           | Version
 ----------------------------- | -------
-Firebase                      | 3.9.0
-FirebaseAnalytics             | 3.5.1
+Firebase                      | 3.10.0
+FirebaseAnalytics             | 3.6.0
 FirebaseAppIndexing           | 1.2.0
 FirebaseAuth                  | 3.0.6
-FirebaseCore                  | 3.4.4
-FirebaseCrash                 | 1.1.3
-FirebaseDatabase              | 3.1.0
-FirebaseDynamicLinks          | 1.3.1
+FirebaseCore                  | 3.4.5
+FirebaseCrash                 | 1.1.4
+FirebaseDatabase              | 3.1.1
+FirebaseDynamicLinks          | 1.3.2
 FirebaseInstanceID            | 1.0.8
-FirebaseInvites               | 1.2.2
+FirebaseInvites               | 1.2.3
 FirebaseMessaging             | 1.2.1
 FirebaseRemoteConfig          | 1.3.1
-FirebaseStorage               | 1.0.4
+FirebaseStorage               | 1.0.5
 GTMOAuth2                     | 1.1.4
 GTMSessionFetcher             | 1.1.7
-Google-Mobile-Ads-SDK         | 7.14.0
+Google-Mobile-Ads-SDK         | 7.15.0
+GoogleAPIClientForREST        | 1.1.1
 GoogleAppUtilities            | 1.1.2
 GoogleInterchangeUtilities    | 1.2.2
-GoogleNetworkingUtilities     | 1.2.2
-GoogleParsingUtilities        | 1.1.2
-GooglePlusUtilities           | 1.1.2
 GoogleSignIn                  | 4.0.1
 GoogleSymbolUtilities         | 1.1.2
 GoogleToolboxForMac           | 2.1.0
