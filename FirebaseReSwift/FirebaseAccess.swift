@@ -38,6 +38,7 @@ public protocol FirebaseAccess {
     func newObjectId() -> String
     func createObject<T: StateType>(_ ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
     func updateObject<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
+    func updateObjectDirectly<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
     func removeObject<T: StateType>(_ ref: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
     func getObject(_ objectRef: FIRDatabaseReference, completion: @escaping (_ objectJSON: JSONObject?) -> Void)
     func observeObject<T: StateType>(_ objectRef: FIRDatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action?
@@ -108,6 +109,8 @@ public extension FirebaseAccess {
          Usually constructed from the base `ref` using `childByAppendingPath(_)`
          - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
          fields to be updated with their values.
+         - preventRecursion: A flag to prevent child values from being updated
+         recursively
      
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
@@ -141,6 +144,25 @@ public extension FirebaseAccess {
         ref.updateChildValues(result)
     }
     
+    /**
+     Updates the Firebase object with the parameters, leaving all other values intact.
+     
+     - Parameters:
+     - ref: The Firebase database reference to the object to be updated.
+     Usually constructed from the base `ref` using `childByAppendingPath(_)`
+     - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
+     fields to be updated with their values.
+     
+     - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
+     type matches the `state` parameter.
+     */
+    public func updateObjectDirectly<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
+        return { state, store in
+            ref.updateChildValues(parameters)
+            return nil
+        }
+    }
+
     /**
      Removes a Firebase object at the given ref.
      
