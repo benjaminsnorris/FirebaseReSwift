@@ -83,6 +83,7 @@ public extension SubscribingState {
         return { state, store in
             if !self.subscribed {
                 let idKey = "id"
+                let refKey = "ref"
                 
                 // Additions
                 query.observe(.childAdded, with: { snapshot in
@@ -95,6 +96,7 @@ public extension SubscribingState {
                         return
                     }
                     json[idKey] = snapshot.key
+                    json[refKey] = snapshot.ref.description()
                     do {
                         let object = try ObjectType(object: json)
                         store.dispatch(ObjectAdded(object: object))
@@ -114,6 +116,7 @@ public extension SubscribingState {
                         return
                     }
                     json[idKey] = snapshot.key
+                    json[refKey] = snapshot.ref.description()
                     do {
                         let object = try ObjectType(object: json)
                         store.dispatch(ObjectChanged(object: object))
@@ -133,6 +136,7 @@ public extension SubscribingState {
                         return
                     }
                     json[idKey] = snapshot.key
+                    json[refKey] = snapshot.ref.description()
                     do {
                         let object = try ObjectType(object: json)
                         store.dispatch(ObjectRemoved(object: object))
