@@ -46,8 +46,8 @@ public protocol FirebaseAccess {
     func search(_ baseQuery: FIRDatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void)
     func monitorConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
     func stopMonitoringConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
-    func upload(_ data: Data, contentType: String, to storageRef: FIRStorageReference, completion: @escaping (URL?, Error?) -> Void)
-    func upload(from url: URL, to storageRef: FIRStorageReference, completion: @escaping (URL?, Error?) -> Void)
+    func upload(_ data: Data, contentType: String, to storageRef: FIRStorageReference, completion: @escaping (FIRStorageReference?, URL?, Error?) -> Void)
+    func upload(from url: URL, to storageRef: FIRStorageReference, completion: @escaping (FIRStorageReference?, URL?, Error?) -> Void)
     func delete(at storageRef: FIRStorageReference, completion: @escaping (Error?) -> Void)
     
     // MARK: - Overridable authentication functions
@@ -292,13 +292,13 @@ public extension FirebaseAccess {
         - data:         Data such as from `UIImage`
         - contentType:  String specifying content type for data, e.g. "image/jpeg"
         - storageRef:   Reference to storage object to upload
-        - completion:   Closure to be executed when upload ends, with download URL and error
+        - completion:   Closure to be executed when upload ends, with final storage reference, download URL and error
      */
-    public func upload(_ data: Data, contentType: String, to storageRef: FIRStorageReference, completion: @escaping (URL?, Error?) -> Void) {
+    public func upload(_ data: Data, contentType: String, to storageRef: FIRStorageReference, completion: @escaping (FIRStorageReference?, URL?, Error?) -> Void) {
         let metadata = FIRStorageMetadata()
         metadata.contentType = contentType
         storageRef.put(data, metadata: metadata) { metadata, error in
-            completion(metadata?.downloadURL(), error)
+            completion(metadata?.storageReference, metadata?.downloadURL(), error)
         }
     }
 
@@ -312,9 +312,9 @@ public extension FirebaseAccess {
         - storageRef:   Reference to storage object to upload
         - completion:   Closure to be executed when upload ends, with download URL and error
      */
-    public func upload(from url: URL, to storageRef: FIRStorageReference, completion: @escaping (URL?, Error?) -> Void) {
+    public func upload(from url: URL, to storageRef: FIRStorageReference, completion: @escaping (FIRStorageReference?, URL?, Error?) -> Void) {
         storageRef.putFile(url, metadata: nil) { metadata, error in
-            completion(metadata?.downloadURL(), error)
+            completion(metadata?.storageReference, metadata?.downloadURL(), error)
         }
     }
     
