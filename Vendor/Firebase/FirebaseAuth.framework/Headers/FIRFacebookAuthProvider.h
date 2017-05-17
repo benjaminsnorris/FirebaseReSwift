@@ -7,31 +7,35 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FIRAuthSwiftNameSupport.h"
+
 @class FIRAuthCredential;
 
 NS_ASSUME_NONNULL_BEGIN
 
-/** @var FIRFacebookAuthProviderID
+/**
     @brief A string constant identifying the Facebook identity provider.
  */
-extern NSString *const FIRFacebookAuthProviderID;
+extern NSString *const FIRFacebookAuthProviderID FIR_SWIFT_NAME(FacebookAuthProviderID);
 
 /** @class FIRFacebookAuthProvider
     @brief Utility class for constructing Facebook credentials.
  */
+FIR_SWIFT_NAME(FacebookAuthProvider)
 @interface FIRFacebookAuthProvider : NSObject
 
 /** @fn credentialWithAccessToken:
     @brief Creates an @c FIRAuthCredential for a Facebook sign in.
+
     @param accessToken The Access Token from Facebook.
-    @return A @c FIRAuthCredential containing the Facebook credentials.
+    @return A FIRAuthCredential containing the Facebook credentials.
  */
 + (FIRAuthCredential *)credentialWithAccessToken:(NSString *)accessToken;
 
 /** @fn init
     @brief This class should not be initialized.
  */
-- (nullable instancetype)init NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 

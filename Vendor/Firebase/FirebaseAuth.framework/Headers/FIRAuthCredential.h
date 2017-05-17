@@ -7,11 +7,14 @@
 
 #import <Foundation/Foundation.h>
 
+#import "FIRAuthSwiftNameSupport.h"
+
 NS_ASSUME_NONNULL_BEGIN
 
 /** @class FIRAuthCredential
     @brief Represents a credential.
  */
+FIR_SWIFT_NAME(AuthCredential)
 @interface FIRAuthCredential : NSObject
 
 /** @property provider
@@ -24,7 +27,7 @@ NS_ASSUME_NONNULL_BEGIN
         methods available in the various authentication provider libraries (like the Facebook
         provider or the Google provider libraries.)
  */
-- (nullable instancetype)init NS_UNAVAILABLE;
+- (instancetype)init NS_UNAVAILABLE;
 
 @end
 
