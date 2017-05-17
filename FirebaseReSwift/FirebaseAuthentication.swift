@@ -46,8 +46,8 @@ public extension FirebaseAccess {
     /**
      Defaults `currentApp` to default Firebase app.
      */
-    public var currentApp: FIRApp? {
-        return FIRApp.defaultApp()
+    public var currentApp: FirebaseApp? {
+        return FirebaseApp.app()
     }
 
     /**
@@ -56,7 +56,8 @@ public extension FirebaseAccess {
      - returns: The user's authentication id, or nil if not authenticated
      */
     public func getUserId() -> String? {
-        guard let currentApp = currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+        guard let currentApp = currentApp else { return nil }
+        let auth = Auth.auth(app: currentApp)
         guard let user = auth.currentUser else { return nil }
         return user.uid
     }
@@ -67,7 +68,8 @@ public extension FirebaseAccess {
      - returns: `True` if email has been verified, otherwise `false`.
      */
     public func getUserEmailVerified() -> Bool {
-        guard let currentApp = currentApp, let auth = FIRAuth(app: currentApp) else { return false }
+        guard let currentApp = currentApp else { return false }
+        let auth = Auth.auth(app: currentApp)
         guard let user = auth.currentUser else { return false }
         return user.isEmailVerified
     }
@@ -77,7 +79,8 @@ public extension FirebaseAccess {
      */
     public func reloadCurrentUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+            guard let currentApp = self.currentApp else { return nil }
+            let auth = Auth.auth(app: currentApp)
             guard let user = auth.currentUser else { return nil }
             user.reload { error in
                 if let error = error {
@@ -93,13 +96,14 @@ public extension FirebaseAccess {
     /**
      Sends verification email to specified user, or current user if not specified.
      */
-    public func sendEmailVerification<T: StateType>(to user: FIRUser?) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func sendEmailVerification<T: StateType>(to user: User?) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            let emailUser: FIRUser
+            let emailUser: User
             if let user = user {
                 emailUser = user
             } else {
-                guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+                guard let currentApp = self.currentApp else { return nil }
+                let auth = Auth.auth(app: currentApp)
                 guard let user = auth.currentUser else { return nil }
                 emailUser = user
             }
@@ -128,7 +132,8 @@ public extension FirebaseAccess {
      */
     public func logInUser<T: StateType>(with email: String, and password: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+            guard let currentApp = self.currentApp else { return nil }
+            let auth = Auth.auth(app: currentApp)
             auth.signIn(withEmail: email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: error))
@@ -155,7 +160,8 @@ public extension FirebaseAccess {
      */
     public func signUpUser<T: StateType>(with email: String, and password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+            guard let currentApp = self.currentApp else { return nil }
+            let auth = Auth.auth(app: currentApp)
             auth.createUser(withEmail: email, password: password) { user, error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: error))
@@ -187,12 +193,13 @@ public extension FirebaseAccess {
      */
     public func changeUserPassword<T: StateType>(to newPassword: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+            guard let currentApp = self.currentApp else { return nil }
+            let auth = Auth.auth(app: currentApp)
             guard let user = auth.currentUser else {
                 store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.currentUserNotFound))
                 return nil
             }
-            user.updatePassword(newPassword) { error in
+            user.updatePassword(to: newPassword) { error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: error))
                 } else {
@@ -214,12 +221,13 @@ public extension FirebaseAccess {
      */
     public func changeUserEmail<T: StateType>(to email: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+            guard let currentApp = self.currentApp else { return nil }
+            let auth = Auth.auth(app: currentApp)
             guard let user = auth.currentUser else {
                 store.dispatch(UserAuthFailed(error: FirebaseAuthenticationError.currentUserNotFound))
                 return nil
             }
-            user.updateEmail(email) { error in
+            user.updateEmail(to: email) { error in
                 if let error = error {
                     store.dispatch(UserAuthFailed(error: error))
                 } else {
@@ -241,7 +249,8 @@ public extension FirebaseAccess {
      */
     public func resetPassword<T: StateType>(for email: String) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
-            guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+            guard let currentApp = self.currentApp else { return nil }
+            let auth = Auth.auth(app: currentApp)
             auth.sendPasswordReset(withEmail: email) { error in
                 DispatchQueue.main.async {
                     if let error = error {
@@ -264,7 +273,8 @@ public extension FirebaseAccess {
     public func logOutUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             do {
-                guard let currentApp = self.currentApp, let auth = FIRAuth(app: currentApp) else { return nil }
+                guard let currentApp = self.currentApp else { return nil }
+                let auth = Auth.auth(app: currentApp)
                 try auth.signOut()
                 store.dispatch(UserLoggedOut())
             } catch {

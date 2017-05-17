@@ -29,32 +29,32 @@ import ReSwift
  */
 public protocol FirebaseAccess {
     /// The base ref for your Firebase app
-    var ref: FIRDatabaseReference { get }
-    var currentApp: FIRApp? { get }
+    var ref: DatabaseReference { get }
+    var currentApp: FirebaseApp? { get }
     
     
     // MARK: - Overridable API functions
     
     func newObjectId() -> String
-    func createObject<T: StateType>(_ ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
-    func updateObject<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
-    func updateObjectDirectly<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
-    func removeObject<T: StateType>(_ ref: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
-    func getObject(_ objectRef: FIRDatabaseReference, completion: @escaping (_ objectJSON: JSONObject?) -> Void)
-    func observeObject<T: StateType>(_ objectRef: FIRDatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action?
-    func stopObservingObject<T: StateType>(_ objectRef: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
-    func search(_ baseQuery: FIRDatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void)
+    func createObject<T: StateType>(_ ref: DatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
+    func updateObject<T: StateType>(_ ref: DatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
+    func updateObjectDirectly<T: StateType>(_ ref: DatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action?
+    func removeObject<T: StateType>(_ ref: DatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
+    func getObject(_ objectRef: DatabaseReference, completion: @escaping (_ objectJSON: JSONObject?) -> Void)
+    func observeObject<T: StateType>(_ objectRef: DatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action?
+    func stopObservingObject<T: StateType>(_ objectRef: DatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action?
+    func search(_ baseQuery: DatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void)
     func monitorConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
     func stopMonitoringConnection<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
-    func upload(_ data: Data, contentType: String, to storageRef: FIRStorageReference, completion: @escaping (String?, URL?, Error?) -> Void)
-    func upload(from url: URL, to storageRef: FIRStorageReference, completion: @escaping (String?, URL?, Error?) -> Void)
-    func delete(at storageRef: FIRStorageReference, completion: @escaping (Error?) -> Void)
+    func upload(_ data: Data, contentType: String, to storageRef: StorageReference, completion: @escaping (String?, URL?, Error?) -> Void)
+    func upload(from url: URL, to storageRef: StorageReference, completion: @escaping (String?, URL?, Error?) -> Void)
+    func delete(at storageRef: StorageReference, completion: @escaping (Error?) -> Void)
     
     // MARK: - Overridable authentication functions
     
     func getUserId() -> String?
     func getUserEmailVerified() -> Bool
-    func sendEmailVerification<T: StateType>(to user: FIRUser?) -> (_ state: T, _ store: Store<T>) -> Action?
+    func sendEmailVerification<T: StateType>(to user: User?) -> (_ state: T, _ store: Store<T>) -> Action?
     func reloadCurrentUser<T: StateType>() -> (_ state: T, _ store: Store<T>) -> Action?
     func logInUser<T: StateType>(with email: String, and password: String) -> (_ state: T, _ store: Store<T>) -> Action?
     func signUpUser<T: StateType>(with email: String, and password: String, completion: ((_ userId: String?) -> Void)?) -> (_ state: T, _ store: Store<T>) -> Action?
@@ -89,7 +89,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func createObject<T: StateType>(_ ref: FIRDatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func createObject<T: StateType>(_ ref: DatabaseReference, createNewChildId: Bool, removeId: Bool, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             let finalRef = createNewChildId ? ref.childByAutoId() : ref
             var parameters = parameters
@@ -115,7 +115,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func updateObject<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func updateObject<T: StateType>(_ ref: DatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             self.recursivelyUpdate(ref, parameters: parameters)
             return nil
@@ -132,7 +132,7 @@ public extension FirebaseAccess {
         - parameters: A `JSONObject` (`[String: AnyObject]`) representing the
         fields to be updated with their values.
     */
-    func recursivelyUpdate(_ ref: FIRDatabaseReference, parameters: JSONObject) {
+    func recursivelyUpdate(_ ref: DatabaseReference, parameters: JSONObject) {
         var result = JSONObject()
         for (key, value) in parameters {
             if let object = value as? JSONObject {
@@ -156,7 +156,7 @@ public extension FirebaseAccess {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the `state` parameter.
      */
-    public func updateObjectDirectly<T: StateType>(_ ref: FIRDatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func updateObjectDirectly<T: StateType>(_ ref: DatabaseReference, parameters: JSONObject) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             ref.updateChildValues(parameters)
             return nil
@@ -172,7 +172,7 @@ public extension FirebaseAccess {
      - returns:     An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose 
      type matches the `state` parameter.
      */
-    public func removeObject<T: StateType>(_ ref: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func removeObject<T: StateType>(_ ref: DatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             ref.removeValue()
             return nil
@@ -187,7 +187,7 @@ public extension FirebaseAccess {
      - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func getObject(_ objectRef: FIRDatabaseReference, completion: @escaping (_ objectJSON: JSONObject?) -> Void) {
+    public func getObject(_ objectRef: DatabaseReference, completion: @escaping (_ objectJSON: JSONObject?) -> Void) {
         objectRef.observeSingleEvent(of: .value, with: { snapshot in
             self.process(snapshot: snapshot, callback: completion)
         })
@@ -200,7 +200,7 @@ public extension FirebaseAccess {
      - objectRef:    A Firebase database reference to the data object
      - completion:   A closure to run after retrieving the data and parsing it
      */
-    public func observeObject<T: StateType>(_ objectRef: FIRDatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func observeObject<T: StateType>(_ objectRef: DatabaseReference, _ callback: @escaping (_ objectJSON: JSONObject?) -> Void) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             objectRef.observe(.value, with: { snapshot in
                 self.process(snapshot: snapshot, callback: callback)
@@ -209,7 +209,7 @@ public extension FirebaseAccess {
         }
     }
     
-    fileprivate func process(snapshot: FIRDataSnapshot, callback: (_ objectJSON: JSONObject?) -> Void) {
+    fileprivate func process(snapshot: DataSnapshot, callback: (_ objectJSON: JSONObject?) -> Void) {
         guard snapshot.exists() && !(snapshot.value is NSNull) else { callback(nil); return }
         if var json = snapshot.value as? JSONObject {
             json["id"] = snapshot.key
@@ -226,7 +226,7 @@ public extension FirebaseAccess {
      
      - parameter objectRef: A Firebase database reference to the data object
      */
-    public func stopObservingObject<T: StateType>(_ objectRef: FIRDatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func stopObservingObject<T: StateType>(_ objectRef: DatabaseReference) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             objectRef.removeAllObservers()
             return ObjectObserved(path: objectRef.description(), observed: false)
@@ -243,7 +243,7 @@ public extension FirebaseAccess {
      - value:       The search term to query
      - completion:  A closure to run after retrieving the data and parsing as JSON
      */
-    public func search(_ baseQuery: FIRDatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void) {
+    public func search(_ baseQuery: DatabaseQuery, key: String, value: String, completion: @escaping (_ json: JSONObject?) -> Void) {
         let query = baseQuery.queryOrdered(byChild: key).queryEqual(toValue: value)
         query.observeSingleEvent(of: .value, with: { snapshot in
             guard snapshot.exists() && !(snapshot.value is NSNull) else { completion(nil); return }
@@ -294,10 +294,10 @@ public extension FirebaseAccess {
         - storageRef:   Reference to storage object to upload
         - completion:   Closure to be executed when upload ends, with file name, download URL and error
      */
-    public func upload(_ data: Data, contentType: String, to storageRef: FIRStorageReference, completion: @escaping (String?, URL?, Error?) -> Void) {
-        let metadata = FIRStorageMetadata()
+    public func upload(_ data: Data, contentType: String, to storageRef: StorageReference, completion: @escaping (String?, URL?, Error?) -> Void) {
+        let metadata = StorageMetadata()
         metadata.contentType = contentType
-        storageRef.put(data, metadata: metadata) { metadata, error in
+        storageRef.putData(data, metadata: metadata) { metadata, error in
             completion(metadata?.name, metadata?.downloadURL(), error)
         }
     }
@@ -312,8 +312,8 @@ public extension FirebaseAccess {
         - storageRef:   Reference to storage object to upload
         - completion:   Closure to be executed when upload ends, with file name, download URL and error
      */
-    public func upload(from url: URL, to storageRef: FIRStorageReference, completion: @escaping (String?, URL?, Error?) -> Void) {
-        storageRef.putFile(url, metadata: nil) { metadata, error in
+    public func upload(from url: URL, to storageRef: StorageReference, completion: @escaping (String?, URL?, Error?) -> Void) {
+        storageRef.putFile(from: url, metadata: nil) { metadata, error in
             completion(metadata?.name, metadata?.downloadURL(), error)
         }
     }
@@ -325,7 +325,7 @@ public extension FirebaseAccess {
         - storageRef:   Reference to storage object to delete
         - completion:   Closure to be executed when deletion is completed, with optional error
      */
-    public func delete(at storageRef: FIRStorageReference, completion: @escaping (Error?) -> Void) {
+    public func delete(at storageRef: StorageReference, completion: @escaping (Error?) -> Void) {
         storageRef.delete { error in
             completion(error)
         }

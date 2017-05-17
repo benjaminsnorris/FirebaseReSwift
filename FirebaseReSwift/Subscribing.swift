@@ -79,7 +79,7 @@ public extension SubscribingState {
      - returns: An `ActionCreator` (`(state: StateType, store: StoreType) -> Action?`) whose
      type matches the state type associated with the store on which it is dispatched.
      */
-    public func subscribeToObjects<T: StateType>(_ query: FIRDatabaseQuery) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func subscribeToObjects<T: StateType>(_ query: DatabaseQuery) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             if !self.subscribed {
                 let idKey = "id"
@@ -159,7 +159,7 @@ public extension SubscribingState {
      
      - Parameter query: The query that was originally used to subscribe to events.
      */
-    public func removeSubscriptions<T: StateType>(_ query: FIRDatabaseQuery) -> (_ state: T, _ store: Store<T>) -> Action? {
+    public func removeSubscriptions<T: StateType>(_ query: DatabaseQuery) -> (_ state: T, _ store: Store<T>) -> Action? {
         return { state, store in
             if self.subscribed {
                 query.removeAllObservers()
